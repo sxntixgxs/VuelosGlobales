@@ -1,3 +1,5 @@
+ DROP SCHEMA airport;
+
 CREATE SCHEMA airport;
 USE airport;
 CREATE TABLE documentTypes(
@@ -142,7 +144,12 @@ CREATE TABLE tripCrews(
     idEmployee VARCHAR(20) NOT NULL,
     idConnection INT NOT NULL,
     PRIMARY KEY(idEmployee,idConnection),
-    FOREIGN KEY (idEmployee) REFERENCES employee(id),
+    FOREIGN KEY (idEmployee) REFERENCES employees(id),
     FOREIGN KEY (idConnection) REFERENCES flightConnections(id)
 );
 
+-- CREATE ROLE 'Administrator';
+-- GRANT ALL PRIVILEGES ON *.* TO 'Administrator';
+-- GRANT 'Administrator' TO 'root'@'localhost';
+-- FLUSH PRIVILEGES;
+-- SELECT * FROM mysql.user;
