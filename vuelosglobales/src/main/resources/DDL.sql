@@ -1,4 +1,4 @@
- DROP SCHEMA airport;
+--  DROP SCHEMA airport;
 
 CREATE SCHEMA airport;
 USE airport;
@@ -146,6 +146,15 @@ CREATE TABLE tripCrews(
     PRIMARY KEY(idEmployee,idConnection),
     FOREIGN KEY (idEmployee) REFERENCES employees(id),
     FOREIGN KEY (idConnection) REFERENCES flightConnections(id)
+);
+
+CREATE TABLE user(
+    id VARCHAR(20) PRIMARY KEY,
+    name VARCHAR(20) NOT NULL,
+    surname VARCHAR(20) NOT NULL,
+    email VARCHAR(20) NOT NULL,
+    idRol INT NOT NULL,
+    FOREIGN KEY (idRol) REFERENCES tripulationRoles(id)
 );
 
 -- CREATE ROLE 'Administrator';
