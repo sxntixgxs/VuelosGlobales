@@ -53,7 +53,7 @@ public class UserRepositoryImp implements UserRepository{
                 try(ResultSet resultSet = preparedStatement.executeQuery()){
                     if(resultSet.next()){
                         User user = new User(resultSet.getString("id"), resultSet.getString("name"), 
-                        resultSet.getString("surname"),resultSet.getString("email"),resultSet.getInt("idRol"));
+                        resultSet.getString("surname"),resultSet.getString("email"),resultSet.getString("password"),resultSet.getInt("idRol"));
                         return Optional.of(user);
                     }else{
                         return Optional.empty();
@@ -100,6 +100,28 @@ public class UserRepositoryImp implements UserRepository{
                 e.printStackTrace();
                 throw new RuntimeException("DB error"+e.getMessage(),e);
             }
+    }
+
+    @Override
+    public Optional<User> findUserByPassAndId(String id, String password) {
+        String query = "SELECT id,name,surname,email,password,idRol FROM user WHERe id = ? AND password = ?";
+        try(Connection connection = dbConnection.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(query)){
+            preparedStatement.setString(1, id);
+            preparedStatement.setString(2, password);
+            try(ResultSet resultSet=preparedStatement.executeQuery()){
+                if(resultSet.next()){
+                    User user = new User(resultSet.getString("id"),resultSet.getString("name"),resultSet.getString("surname"),resultSet.getString("email"),resultSet.getString("password"),resultSet.getInt("idRol"));
+                    return Optional.of(user);
+                }else{
+                    return Optional.empty();
+                }
+
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException("DB Error"+e.getMessage(),e);
+        }
     }
     
 }

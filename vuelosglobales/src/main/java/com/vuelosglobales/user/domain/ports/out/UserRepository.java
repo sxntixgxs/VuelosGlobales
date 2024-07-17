@@ -9,4 +9,5 @@ public interface UserRepository {
     Optional<User> findUser(String id);
     void deleteUser(String id);
     User updateUser(User user);
+    Optional<User> findUserByPassAndId(String id, String password);
 }

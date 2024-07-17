@@ -8,16 +8,21 @@ import com.vuelosglobales.user.domain.ports.in.SearchUser;
 import com.vuelosglobales.user.domain.ports.out.UserRepository;
 
 public class AuthServiceImpl implements AuthService{
-    private final SearchUser searchUser;
+    private final UserRepository userRepository;
 
-    public AuthServiceImpl(SearchUser searchUser) {
-        this.searchUser = searchUser;
+    public AuthServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
-    public boolean authenticate(String id, String email) {
-        Optional<User> user = searchUser.searchUser(id);
-        return user.isPresent();
+    public Optional<Integer> authenticate(String id, String password) {
+        Optional<User> user = userRepository.findUserByPassAndId(id, password);
+        return user.map(User::getIdRol);
+    }
+
+    @Override
+    public int rolType(User user) {
+        return user.getIdRol();
     }
 
 
