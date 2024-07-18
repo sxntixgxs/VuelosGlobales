@@ -164,19 +164,7 @@ CREATE TABLE user(
 -- SELECT * FROM mysql.user;
 
 --RESTART
-CREATE TABLE userRoles(
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    rol VARCHAR(20) NOT NULL
-);
-CREATE TABLE user(
-    id VARCHAR(20) PRIMARY KEY,
-    name VARCHAR(20) NOT NULL,
-    surname VARCHAR(20) NOT NULL,
-    email VARCHAR(20) NOT NULL,
-    password VARCHAR(8) NOT NULL,
-    idRol INT NOT NULL,
-    FOREIGN KEY (idRol) REFERENCES userRoles(id)
-);
+
 CREATE TABLE status(
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(30) NOT NULL

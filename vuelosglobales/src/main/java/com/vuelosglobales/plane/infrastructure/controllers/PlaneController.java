@@ -7,14 +7,18 @@ import java.util.Scanner;
 import com.vuelosglobales.plane.application.services.DateValidatorImp;
 import com.vuelosglobales.plane.application.services.PlaneServiceImp;
 import com.vuelosglobales.plane.domain.models.Plane;
+import com.vuelosglobales.plane.infrastructure.repositories.SpecificRepositoryImp;
 
 public class PlaneController {
     private final PlaneServiceImp planeServiceImp;
     private final DateValidatorImp dateValidatorImp;
+    private final InfoController infoController;
+    // private final SpecificRepositoryImp specificRepositoryImp;
 
-    public PlaneController(PlaneServiceImp planeServiceImp,DateValidatorImp dateValidatorImp) {
+    public PlaneController(PlaneServiceImp planeServiceImp,DateValidatorImp dateValidatorImp,InfoController infoController) {
         this.planeServiceImp = planeServiceImp;
         this.dateValidatorImp = dateValidatorImp;
+        this.infoController = infoController;
     }
     public void createPlane(){
         Scanner sc = new Scanner(System.in);
@@ -29,10 +33,13 @@ public class PlaneController {
             System.out.println("Use the correct format: YYYY-MM-DD");
             return;
         }
+        infoController.showStatuses();
         System.out.println("Enter the status ID: ");
         int idStatus = sc.nextInt();
+        infoController.showAirlines();
         System.out.println("Enter the airline ID: ");
         int idAirline = sc.nextInt();
+        infoController.showModels();
         System.out.println("Enter the model ID: ");
         int idModel = sc.nextInt();
         Plane plane = new Plane(id, capacity, date, idStatus, idAirline, idModel);
