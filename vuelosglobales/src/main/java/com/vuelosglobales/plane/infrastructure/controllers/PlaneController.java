@@ -25,8 +25,19 @@ public class PlaneController {
     /*CREATE PLANE SECTION */
     public void createPlane(){
         Scanner sc = new Scanner(System.in);
-        System.out.println("Enter plane ID: ");
-        String id = sc.nextLine().toUpperCase();
+        String id = "";
+        while(true){
+            System.out.println("Enter NEW plane ID: ");
+            id = sc.nextLine().toUpperCase();
+            Optional<Plane> plane = planeServiceImp.findPlaneById(id);
+            if(plane.isPresent()){
+               System.out.println("Plane with that ID already exists!");
+               sc.nextLine();
+               continue; 
+            }else{
+                break;
+            }
+        }
 /*FALTA VERIFICACION DE QUE NO EXISTA ESE ID!!!!!! */
         boolean validInput = false;
         int capacity=0;
