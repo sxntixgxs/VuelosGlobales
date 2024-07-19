@@ -12,14 +12,26 @@ public class InfoController {
     }
     public void showAirlines(){
         List<String> airlineList = infoService.getAirline();
-        airlineList.forEach(System.out::println);
+        int count=0;
+        for (String airline : airlineList) {
+            count++;
+            System.out.println("ID: "+count+" "+airline);
+        }
     }
     public void showStatuses(){
         List<String> statusList = infoService.getStatus();
-        statusList.forEach(System.out::println);
+        int count = 0;
+        for (String status : statusList) {
+            count++;
+            System.out.println("ID :"+count+" "+status);
+        }
     }
     public void showModels(){
         List<String> modelList = infoService.getModel();
-        modelList.forEach(System.out::println);
+        int count = 0;
+        for (String model : modelList) {
+            count++;
+            System.out.println("ID: "+count+" "+model);
+        }
     }
 }

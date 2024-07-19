@@ -1,13 +1,12 @@
 package com.vuelosglobales.plane.infrastructure.controllers;
 
-import java.sql.Date;
+import java.util.InputMismatchException;
 import java.util.Optional;
 import java.util.Scanner;
 
 import com.vuelosglobales.plane.application.services.DateValidatorImp;
 import com.vuelosglobales.plane.application.services.PlaneServiceImp;
 import com.vuelosglobales.plane.domain.models.Plane;
-import com.vuelosglobales.plane.infrastructure.repositories.SpecificRepositoryImp;
 
 public class PlaneController {
     private final PlaneServiceImp planeServiceImp;
@@ -24,8 +23,19 @@ public class PlaneController {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter plane ID: ");
         String id = sc.nextLine();
-        System.out.println("Enter plane capacity: ");
-        int capacity = sc.nextInt();
+
+        boolean validInput = false;
+        int capacity=0;
+        while(validInput){
+            System.out.println("Enter plane capacity: ");
+            try{
+                capacity = sc.nextInt();
+                validInput = true;
+            }catch(InputMismatchException e){
+                System.out.println("Input invalid, try again ");
+                sc.nextLine();
+            }
+        }
         sc.nextLine();
         System.out.println("Enter the fabrication date: THIS FORMAT YYYY-MM-DD");
         String date = sc.nextLine();

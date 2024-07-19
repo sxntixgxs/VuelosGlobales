@@ -190,17 +190,12 @@ import com.vuelosglobales.plane.application.services.DateValidatorImp;
 import com.vuelosglobales.plane.application.services.InfoService;
 import com.vuelosglobales.plane.application.services.PlaneServiceImp;
 import com.vuelosglobales.plane.domain.models.Plane;
-import com.vuelosglobales.plane.domain.ports.out.PlaneRepository;
-import com.vuelosglobales.plane.domain.ports.out.SpecificRepository;
 import com.vuelosglobales.plane.infrastructure.controllers.InfoController;
 import com.vuelosglobales.plane.infrastructure.controllers.PlaneController;
 import com.vuelosglobales.plane.infrastructure.repositories.PlaneRepositoryImp;
 import com.vuelosglobales.plane.infrastructure.repositories.SpecificRepositoryImp;
 import com.vuelosglobales.user.application.services.AuthServiceImpl;
-import com.vuelosglobales.user.application.services.SearchUserImpl;
 import com.vuelosglobales.user.domain.ports.in.AuthService;
-import com.vuelosglobales.user.domain.ports.in.SearchUser;
-import com.vuelosglobales.user.domain.ports.out.UserRepository;
 import com.vuelosglobales.user.infrastructure.config.DBConnection;
 import com.vuelosglobales.user.infrastructure.controllers.UserController;
 import com.vuelosglobales.user.infrastructure.repositories.UserRepositoryImp;
@@ -254,10 +249,17 @@ public class Main {
 
     public static Optional<Integer> login(UserController userController) {
         System.out.println("Login ~ VuelosGlobales");
+        System.out.println("For login press 1\nIf you want close the program press any key");
+        int exit = sc.nextInt();
+        if(exit!=1){
+            return Optional.empty();
+        }
+        sc.nextLine();
         System.out.println("Type your ID: ");
         String id = sc.nextLine();
         System.out.println("Type your password: ");
         String password = sc.nextLine();
+        
         Optional<Integer> roleId = userController.login(id, password);
         return roleId;
     }

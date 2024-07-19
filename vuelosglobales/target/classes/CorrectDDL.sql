@@ -1,7 +1,6 @@
 CREATE SCHEMA airport;
 USE airport;
 
---RESTART
 CREATE TABLE userRoles(
     id INT PRIMARY KEY AUTO_INCREMENT,
     rol VARCHAR(20) NOT NULL
