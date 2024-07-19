@@ -110,6 +110,15 @@ public class Main {
                         }
                         break;
                     case 2:
+                        /*
+                         * 1. mostrar trips disponibles
+                         * 2. elegir trayecto
+                         * 3. mostrar todos los empleados disponibles
+                         * 4. elegir empleados
+                         * 5. guardar en DB
+                         * 6. confirmar action UI
+                         */
+                    case 10:
                         System.out.println("Exiting the program...");
                         return false; // Exit the session
                     default:
@@ -126,7 +135,8 @@ public class Main {
 
     public static int adminMenu() {
         System.out.println("1. Plane actions");
-        System.out.println("2. Exit");
+        System.out.println("2. Assign crew");
+        System.out.println("10. Exit");
         int choice = sc.nextInt();
         sc.nextLine(); // Consume newline
         return choice;

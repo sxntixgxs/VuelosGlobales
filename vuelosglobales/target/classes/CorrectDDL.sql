@@ -81,21 +81,28 @@ CREATE TABLE tripStatus(
     id INT PRIMARY AUTO_INCREMENT,
     status VARCHAR(20) NOT NULL --confirmado y pte de tripulacion
 );
-CREATE TABLE trip(
-    idRoute INT NOT NULL,
-    idPilot INT,
-    idCopilot INT,
-    idCrewLeader INT,
-    idCrewAssistant INT,
-    idCrewAssistant2 INT,
-    date DATE NOT NULL,
-    idStatus INT NOT NULL,
-    PRIMARY KEY(idRoute,date,idStatus),
-    FOREIGN KEY(idRoute) REFERENCES route(id),
+CREATE TABLE crew(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    idPilot VARCHAR(20),
+    idCopilot VARCHAR(20),
+    idCrewLeader VARCHAR(20),
+    idCrewAssistant VARCHAR(20),
+    idCrewAssistant2 VARCHAR(20),
     FOREIGN KEY(idPilot) REFERENCES employee(id),
     FOREIGN KEY(idCopilot) REFERENCES employee(id),
     FOREIGN KEY(idCrewLeader) REFERENCES employee(id),
     FOREIGN KEY(idCrewAssistant) REFERENCES employee(id),
-    FOREIGN KEY(idCrewAssistant2) REFERENCES employee(id),
-    FOREIGN KEY(idStatus) REFERENCES status(id)  
+    FOREIGN KEY(idCrewAssistant2) REFERENCES employee(id)
+)
+CREATE TABLE trip(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    idRoute INT NOT NULL,
+    idCrew INT,
+    date DATE NOT NULL,
+    idStatus INT NOT NULL,
+    idPlane INT NOT NULL,
+    FOREIGN KEY(idRoute) REFERENCES route(id),
+    FOREIGN KEY (idCrew) REFERENCES crew(id),
+    FOREIGN KEY(idStatus) REFERENCES status(id),
+    FOREIGN KEY (idPlane) REFERENCES plnae(id)
 );
