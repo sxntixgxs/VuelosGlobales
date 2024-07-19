@@ -86,6 +86,7 @@ public class PlaneRepositoryImp implements PlaneRepository{
             preparedStatement.setInt(3, plane.getIdStatus());
             preparedStatement.setInt(4, plane.getIdAirline());
             preparedStatement.setInt(5, plane.getIdModel());
+            preparedStatement.setString(6, plane.getId());
             int rowsAff = preparedStatement.executeUpdate();
             if(rowsAff==1){
                 return plane;

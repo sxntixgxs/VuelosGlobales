@@ -6,4 +6,5 @@ public interface SpecificRepository {
     List<String> getStatus();
     List<String> getAirline();
     List<String> getModel();
+    List<String> getId();
 }

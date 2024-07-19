@@ -7,6 +7,8 @@ public class Plane {
     int idStatus;
     int idAirline;
     int idModel;
+    public Plane() {
+    }
     public Plane(String id, int capacity, String fabrication, int idStatus, int idAirline, int idModel) {
         this.id = id;
         this.capacity = capacity;

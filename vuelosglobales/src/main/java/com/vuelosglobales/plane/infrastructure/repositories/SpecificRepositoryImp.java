@@ -72,5 +72,25 @@ public class SpecificRepositoryImp implements SpecificRepository{
             throw new RuntimeException("DB error"+e.getMessage(),e);
         }
     }
+
+    @Override
+    public List<String> getId() {
+        String query = "SELECT id FROM plane";
+        try(
+            Connection connection = dbConnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query)
+        ){
+            List<String> idList = new ArrayList<>();
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                String idPlane = resultSet.getString("id");
+                idList.add(idPlane);
+            }
+            return idList;
+        }catch(SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException("DB error "+e.getMessage(),e);
+        }
+    }
     
 }

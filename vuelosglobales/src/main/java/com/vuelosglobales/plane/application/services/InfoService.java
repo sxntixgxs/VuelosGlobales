@@ -19,4 +19,7 @@ public class InfoService {
     public List<String> getModel(){
         return specificRepository.getModel();
     }
+    public List<String> getId(){
+        return specificRepository.getId();
+    }
 }

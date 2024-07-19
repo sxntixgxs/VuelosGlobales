@@ -34,4 +34,11 @@ public class InfoController {
             System.out.println("ID: "+count+" "+model);
         }
     }
+    public void showIds(){
+        List<String> idList = infoService.getId();
+        System.out.println("***********");
+        for(String id : idList){
+            System.out.println(id);
+        }
+    }
 }
