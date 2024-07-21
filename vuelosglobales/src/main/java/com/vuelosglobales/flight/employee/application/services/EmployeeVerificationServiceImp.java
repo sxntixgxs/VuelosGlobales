@@ -5,11 +5,12 @@ import java.util.List;
 import com.vuelosglobales.flight.employee.domain.ports.in.EmployeeOperations;
 import com.vuelosglobales.flight.employee.domain.ports.in.EmployeeVerificationService;
 import com.vuelosglobales.flight.employee.domain.ports.out.EmployeeVerificationRepository;
+import com.vuelosglobales.flight.employee.infrastructure.repositories.EmployeeVerifyRepoImp;
 
 public class EmployeeVerificationServiceImp implements EmployeeVerificationService{
-    private final EmployeeVerificationRepository verificationRepository;
+    private final EmployeeVerifyRepoImp verificationRepository;
 
-    public EmployeeVerificationServiceImp(EmployeeVerificationRepository verificationRepository) {
+    public EmployeeVerificationServiceImp(EmployeeVerifyRepoImp verificationRepository) {
         this.verificationRepository = verificationRepository;
     }
 

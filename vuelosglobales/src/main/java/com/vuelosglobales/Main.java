@@ -4,6 +4,20 @@ import java.util.InputMismatchException;
 import java.util.Optional;
 import java.util.Scanner;
 
+import com.vuelosglobales.flight.employee.application.services.CrewService;
+import com.vuelosglobales.flight.employee.application.services.EmployeeVerificationServiceImp;
+import com.vuelosglobales.flight.employee.application.services.ShowEmployeeService;
+import com.vuelosglobales.flight.employee.domain.models.Employee;
+import com.vuelosglobales.flight.employee.domain.ports.out.EmployeeRepository;
+import com.vuelosglobales.flight.employee.domain.ports.out.EmployeeVerificationRepository;
+import com.vuelosglobales.flight.employee.infrastructure.controllers.CrewController;
+import com.vuelosglobales.flight.employee.infrastructure.repositories.CrewRepositoryImp;
+import com.vuelosglobales.flight.employee.infrastructure.repositories.EmployeeRepositoryImp;
+import com.vuelosglobales.flight.employee.infrastructure.repositories.EmployeeVerifyRepoImp;
+import com.vuelosglobales.flight.employee.infrastructure.repositories.ShowEmployeeRepositoryImp;
+import com.vuelosglobales.flight.trip.application.service.TripService;
+import com.vuelosglobales.flight.trip.infrastructure.controllers.TripController;
+import com.vuelosglobales.flight.trip.infrastructure.repositories.TripRepositoryImp;
 import com.vuelosglobales.plane.application.services.DateValidatorImp;
 import com.vuelosglobales.plane.application.services.InfoService;
 import com.vuelosglobales.plane.application.services.PlaneServiceImp;
@@ -28,15 +42,33 @@ public class Main {
         UserRepositoryImp userRepositoryImp = new UserRepositoryImp(dbConnection);
         AuthService authService = new AuthServiceImpl(userRepositoryImp);
         UserController userController = new UserController(userRepositoryImp, authService);
+
+        // Plane dependencies
         PlaneRepositoryImp planeRepository = new PlaneRepositoryImp(dbConnection);
         SpecificRepositoryImp specificRepository = new SpecificRepositoryImp(dbConnection);
-        ShowDataRepoImp showDataRepoImp = new ShowDataRepoImp(specificRepository);
-        ShowEnteredDataService showEnteredDataService = new ShowEnteredDataService(showDataRepoImp);
+        ShowDataRepoImp showDataRepo = new ShowDataRepoImp(specificRepository);
+        PlaneServiceImp planeService = new PlaneServiceImp(planeRepository);
+        DateValidatorImp dateValidator = new DateValidatorImp();
         InfoService infoService = new InfoService(specificRepository);
-        PlaneServiceImp planeServiceImp = new PlaneServiceImp(planeRepository);
-        DateValidatorImp dateValidatorImp = new DateValidatorImp();
         InfoController infoController = new InfoController(infoService);
-        PlaneController planeController = new PlaneController(planeServiceImp, dateValidatorImp, infoController, showEnteredDataService);
+        ShowEnteredDataService showEnteredDataService = new ShowEnteredDataService(showDataRepo);
+        PlaneController planeController = new PlaneController(planeService, dateValidator,infoController,showEnteredDataService);
+
+        // Employee dependencies
+        // ShowEmployeeService showEmployeeService = new ShowEmployeeService(showE);
+        EmployeeRepositoryImp employeeRepository = new EmployeeRepositoryImp(dbConnection);
+        EmployeeVerifyRepoImp verificationRepository = new EmployeeVerifyRepoImp(dbConnection);
+        EmployeeVerificationServiceImp employeeVerificationServiceImp = new EmployeeVerificationServiceImp(verificationRepository);
+        ShowEmployeeRepositoryImp showEmployeeRepository = new ShowEmployeeRepositoryImp(verificationRepository);
+        ShowEmployeeService showEmployeeService = new ShowEmployeeService(showEmployeeRepository);
+        // Trip dependencies
+        CrewRepositoryImp crewRepository = new CrewRepositoryImp(dbConnection);
+        CrewService crewService = new CrewService(showEmployeeService,employeeRepository,crewRepository); 
+        TripRepositoryImp tripRepository = new TripRepositoryImp(dbConnection);
+        TripService tripService = new TripService(tripRepository);
+
+        TripController tripController = new TripController(crewService, tripService, showEnteredDataService, planeService);
+
 
         while (true) {
             System.out.println("For login press x");
@@ -48,7 +80,7 @@ public class Main {
                 if (roleId.isPresent()) {
                     System.out.println("Login successful. Role ID: " + roleId.get());
                     while (true) {
-                        boolean continueSession = displayMenu(roleId.get(), planeController);
+                        boolean continueSession = displayMenu(roleId.get(), planeController,tripController);
                         if (!continueSession) {
                             break; // Exit the inner loop to log in again or exit the program
                         }
@@ -84,7 +116,7 @@ public class Main {
         return userController.login(id, password);
     }
 
-    public static boolean displayMenu(int roleId, PlaneController planeController) {
+    public static boolean displayMenu(int roleId, PlaneController planeController,TripController tripController) {
         switch (roleId) {
             case 1:
                 int choice = adminMenu();
@@ -118,6 +150,15 @@ public class Main {
                          * 5. guardar en DB
                          * 6. confirmar action UI
                          */
+                        int tripChoice = tripMenu();
+                        switch (tripChoice) {
+                            case 1:
+                                tripController.assignCrewToTrip(); 
+                                break;
+                        
+                            default:
+                                break;
+                        }
                     case 10:
                         System.out.println("Exiting the program...");
                         return false; // Exit the session
@@ -135,7 +176,7 @@ public class Main {
 
     public static int adminMenu() {
         System.out.println("1. Plane actions");
-        System.out.println("2. Assign crew");
+        System.out.println("2. Trip actions");
         System.out.println("10. Exit");
         int choice = sc.nextInt();
         sc.nextLine(); // Consume newline
@@ -158,5 +199,25 @@ public class Main {
             }
         }
         return choice;
+    }
+    public static int tripMenu(){
+        while(true){
+            System.out.println("1. Assign crew to trip");
+            try{
+                int choice = sc.nextInt();
+                if(choice<1){
+                    System.out.println("Invalid option, try again");
+                    sc.nextLine();
+                    continue;
+                }else{
+                    return choice;
+                }
+
+            }catch(InputMismatchException e){
+                System.out.println("Invalid input, try again");
+                sc.nextLine();
+                continue;
+            }
+        }
     }
 }
