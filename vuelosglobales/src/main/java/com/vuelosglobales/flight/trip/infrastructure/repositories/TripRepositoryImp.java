@@ -90,9 +90,9 @@ public class TripRepositoryImp implements TripRepository{
     }
 
     @Override
-    public List<String> ShowTrips() {
+    public List<List<String>> ShowTrips() {
         String query = "SELECT T.id,C1.name AS CityDepature,C2.name AS CityArrival ,T.idCrew,T.date,S.name,T.idPlane FROM trip T INNER JOIN route R ON T.idRoute = R.id INNER JOIN status S ON T.idStatus = S.id INNER JOIN city C1 ON R.idDepature = C1.id INNER JOIN city C2 ON R.idArrival = C2.id";
-        List<String> tripList = new ArrayList<>();
+        List<List<String>> tripList = new ArrayList<>();
         String idTrip = "";                
         String cDepature ="";
         String cArrival = "";
@@ -105,23 +105,17 @@ public class TripRepositoryImp implements TripRepository{
             PreparedStatement preparedStatement = connection.prepareStatement(query)
         ){
             ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
-                idTrip = Integer.toString(resultSet.getInt("T.id"));
-                cDepature = resultSet.getString("CityDepature");
-                cArrival = resultSet.getString("CityArrival");
-                idCrew = Integer.toString(resultSet.getInt("T.idCrew"));
-                date = resultSet.getString("T.date");
-                status = resultSet.getString("S.name");
-                idPlane = resultSet.getString("T.idPlane");
- 
+            while(resultSet.next()){
+                List<String> tripSingular = new ArrayList<>();
+                tripSingular.add(Integer.toString(resultSet.getInt("T.id")));//idx 0
+                tripSingular.add(resultSet.getString("CityDepature"));//idx 1
+                tripSingular.add(resultSet.getString("CityArrival"));//idx 2
+                tripSingular.add(Integer.toString(resultSet.getInt("T.idCrew")));//idx 3
+                tripSingular.add(resultSet.getString("T.date"));//idx 4
+                tripSingular.add(resultSet.getString("S.name"));//idx 5
+                tripSingular.add(resultSet.getString("T.idPlane"));//idx6
+                tripList.add(tripSingular);
             }
-            tripList.add(idTrip);//idx: 0
-            tripList.add(cDepature);//idx: 1
-            tripList.add(cArrival);//idx: 2
-            tripList.add(idCrew);//idx: 3
-            tripList.add(date);//idx: 4
-            tripList.add(status);//idx: 5
-            tripList.add(idPlane);//idx: 6
             return tripList;
         }catch(SQLException e){
             e.printStackTrace();

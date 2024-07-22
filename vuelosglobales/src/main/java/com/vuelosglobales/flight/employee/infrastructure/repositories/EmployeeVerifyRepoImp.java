@@ -20,14 +20,14 @@ public class EmployeeVerifyRepoImp implements EmployeeVerificationRepository{
 
     @Override
     public List<String> getAirport() {
-        String query = "SELECT A.id,A.name, C.name FROM airport A INNE JOIN city C ON A.idCity = C.id";
+        String query = "SELECT A.id,A.name, C.name FROM airport A INNER JOIN city C ON A.idCity = C.id";
         List<String> airportList = new ArrayList<>();
         try(
             Connection connection = dbConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(query)
         ){
             ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
+            while(resultSet.next()){
                 String airport = "ID: "+resultSet.getInt("id")+" "+resultSet.getString("A.name")+" "+resultSet.getString("C.name");
                 airportList.add(airport);
             }
@@ -47,7 +47,7 @@ public class EmployeeVerifyRepoImp implements EmployeeVerificationRepository{
             PreparedStatement preparedStatement = connection.prepareStatement(query)
         ){
             ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
+            while(resultSet.next()){
                 String airline =resultSet.getInt("id")+" "+resultSet.getString("name");
                 airlineList.add(airline);
             }
@@ -67,7 +67,7 @@ public class EmployeeVerifyRepoImp implements EmployeeVerificationRepository{
             PreparedStatement preparedStatement = connection.prepareStatement(query)
         ){
             ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
+            while(resultSet.next()){
                 String country = resultSet.getInt("id")+" "+resultSet.getString("name");
                 countryList.add(country);
             }
@@ -95,6 +95,25 @@ public class EmployeeVerifyRepoImp implements EmployeeVerificationRepository{
         }catch(SQLException e){
             e.printStackTrace();
             throw new RuntimeException("DB Error"+e.getMessage(),e);
+        }
+    }
+
+    @Override
+    public List<String> getRol() {
+        String query = "SELECT rol FROM userRoles"; 
+        List<String> rolList = new ArrayList<>();
+        try(
+            Connection connection = dbConnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query)
+        ){
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                rolList.add(resultSet.getString("rol"));
+            }
+            return rolList;
+        }catch(SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException("DB error: "+e.getMessage(),e);
         }
     }
 }

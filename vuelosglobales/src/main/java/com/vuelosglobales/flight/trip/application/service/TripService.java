@@ -30,7 +30,7 @@ public class TripService implements TripOperations {
     }
 
     @Override
-    public List<String> showTrips() {
+    public List<List<String>> showTrips() {
         return tripRepository.ShowTrips();
     }
     

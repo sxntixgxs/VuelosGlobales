@@ -46,7 +46,7 @@ public class UserRepositoryImp implements UserRepository{
 
     @Override
     public Optional<User> findUser(String id) {
-        String query = "SELECT id,name,surname,email,idRol FROM user WHERE id = ?";
+        String query = "SELECT id,name,surname,email,password,idRol FROM user WHERE id = ?";
         try(Connection connection = dbConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(query)){
                 preparedStatement.setString(1, id);

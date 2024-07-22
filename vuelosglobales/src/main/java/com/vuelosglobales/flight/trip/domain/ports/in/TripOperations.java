@@ -9,6 +9,6 @@ public interface TripOperations {
     Optional<Trip> findTripById(int id);
     Optional<Trip> updateTrip(Trip trip);
     boolean deleteTrip(int id);
-    List<String> showTrips();
+    List<List<String>> showTrips();
     
 }

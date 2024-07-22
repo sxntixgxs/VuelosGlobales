@@ -9,5 +9,5 @@ public interface TripRepository {
     Optional<Trip> findTripById(int id);
     Optional<Trip> updateTrip(Trip trip);
     boolean deleteTrip(int id);
-    List<String> ShowTrips();
+    List<List<String>> ShowTrips();
 }

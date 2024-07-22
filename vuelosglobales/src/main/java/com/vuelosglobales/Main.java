@@ -29,6 +29,7 @@ import com.vuelosglobales.plane.infrastructure.repositories.PlaneRepositoryImp;
 import com.vuelosglobales.plane.infrastructure.repositories.ShowDataRepoImp;
 import com.vuelosglobales.plane.infrastructure.repositories.SpecificRepositoryImp;
 import com.vuelosglobales.user.application.services.AuthServiceImpl;
+import com.vuelosglobales.user.application.services.SearchUserImpl;
 import com.vuelosglobales.user.domain.ports.in.AuthService;
 import com.vuelosglobales.user.infrastructure.config.DBConnection;
 import com.vuelosglobales.user.infrastructure.controllers.UserController;
@@ -53,13 +54,13 @@ public class Main {
         InfoController infoController = new InfoController(infoService);
         ShowEnteredDataService showEnteredDataService = new ShowEnteredDataService(showDataRepo);
         PlaneController planeController = new PlaneController(planeService, dateValidator,infoController,showEnteredDataService);
-
+        SearchUserImpl searchUser = new SearchUserImpl(userRepositoryImp);
         // Employee dependencies
         // ShowEmployeeService showEmployeeService = new ShowEmployeeService(showE);
         EmployeeRepositoryImp employeeRepository = new EmployeeRepositoryImp(dbConnection);
         EmployeeVerifyRepoImp verificationRepository = new EmployeeVerifyRepoImp(dbConnection);
         EmployeeVerificationServiceImp employeeVerificationServiceImp = new EmployeeVerificationServiceImp(verificationRepository);
-        ShowEmployeeRepositoryImp showEmployeeRepository = new ShowEmployeeRepositoryImp(verificationRepository);
+        ShowEmployeeRepositoryImp showEmployeeRepository = new ShowEmployeeRepositoryImp(verificationRepository,searchUser);
         ShowEmployeeService showEmployeeService = new ShowEmployeeService(showEmployeeRepository);
         // Trip dependencies
         CrewRepositoryImp crewRepository = new CrewRepositoryImp(dbConnection);

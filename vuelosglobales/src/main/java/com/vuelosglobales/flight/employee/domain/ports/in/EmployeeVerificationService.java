@@ -7,4 +7,5 @@ public interface EmployeeVerificationService {
     List<String> getAirlines();
     List<String> getCountries();
     List<String> getEmployees();
+    List<String> getRoles();
 }

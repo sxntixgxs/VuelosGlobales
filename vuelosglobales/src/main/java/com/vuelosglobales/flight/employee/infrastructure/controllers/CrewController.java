@@ -14,17 +14,23 @@ import com.vuelosglobales.flight.employee.domain.models.Employee;
 import com.vuelosglobales.flight.employee.domain.ports.out.CrewRepository;
 import com.vuelosglobales.flight.employee.domain.ports.out.EmployeeRepository;
 import com.vuelosglobales.flight.employee.infrastructure.repositories.CrewRepositoryImp;
+import com.vuelosglobales.user.application.services.SearchUserImpl;
+import com.vuelosglobales.user.domain.models.User;
+import com.vuelosglobales.user.infrastructure.controllers.UserController;
+import com.vuelosglobales.user.infrastructure.repositories.UserRepositoryImp;
 
 public class CrewController {
     private final CrewService crewService;
     private final EmployeeRepository employeeRepository;
     private final VerificationController verificationController;
     private final ShowEmployeeService showEmployeeService;
-    public CrewController(CrewService crewService, EmployeeRepository employeeRepository, VerificationController verificationController, ShowEmployeeService showEmployeeService) {
+    private final SearchUserImpl searchUserImpl;
+    public CrewController(CrewService crewService, EmployeeRepository employeeRepository, VerificationController verificationController, ShowEmployeeService showEmployeeService,SearchUserImpl searchUserImpl) {
         this.crewService = crewService;
         this.employeeRepository = employeeRepository;
         this.verificationController = verificationController;
         this.showEmployeeService = showEmployeeService;
+        this.searchUserImpl = searchUserImpl;
     }
     
     public void createCrew(){
@@ -72,14 +78,22 @@ public class CrewController {
             idCrewLeader = sc.nextLine();
             Optional<Employee> optionalCrewLeader = employeeRepository.findEmployeeById(idCrewLeader);
             if(optionalCrewLeader.isPresent()){
-                System.out.println("This is your Crew Leader select ");
-                showEmployeeService.showEmployee(optionalCrewLeader.get());
-                sc.nextLine();
-                break;
+                Optional<User> optionalUser = searchUserImpl.searchUser(optionalCrewLeader.get().getIdUser());
+                if(optionalUser.get().getIdRol()==2 || optionalUser.get().getIdRol()==3){
+                    System.out.println("This is your Crew Leader select ");
+                    showEmployeeService.showEmployee(optionalCrewLeader.get());
+                    sc.nextLine();
+                    break;
+                }else{
+                    System.out.println("Invalid input, try again");
+                    sc.nextLine();
+                    continue;
+                }
+
             }else{
                 System.out.println("Invalid input, try again");
                 sc.nextLine();
-                break;
+                continue;
             }
         }while(true){
             System.out.println("Enter the Crew Assistant #1 ID: ");
@@ -87,9 +101,15 @@ public class CrewController {
             idCrewAssistant = sc.nextLine();
             Optional<Employee> optionalCrewAssistant = employeeRepository.findEmployeeById(idCrewAssistant);
             if(optionalCrewAssistant.isPresent()){
-                System.out.println("This is your Crew Assistant #1 select");
-                showEmployeeService.showEmployee(optionalCrewAssistant.get());
-                break;
+                Optional<User> optionalUser = searchUserImpl.searchUser(optionalCrewAssistant.get().getIdUser());
+                if(optionalUser.get().getIdRol()==2||optionalUser.get().getIdRol()==3){
+                    System.out.println("This is your Crew Assistant #1 select");
+                    showEmployeeService.showEmployee(optionalCrewAssistant.get());
+                    break;
+                }else{
+                    System.out.println("Invalid input, try again");
+                    continue;
+                }
             }else{
                 System.out.println("Invalid input, try again");
                 sc.nextLine();
@@ -101,9 +121,16 @@ public class CrewController {
             idCrewAssistant2 = sc.nextLine();
             Optional<Employee> optionalCrewAssistant2 = employeeRepository.findEmployeeById(idCrewAssistant2);
             if(optionalCrewAssistant2.isPresent()){
-                System.out.println("This is your Crew Assistant #1 select");
-                showEmployeeService.showEmployee(optionalCrewAssistant2.get());
-                break;
+                Optional<User> optionalUser = searchUserImpl.searchUser(optionalCrewAssistant2.get().getIdUser());
+                if(optionalUser.get().getIdRol()==2||optionalUser.get().getIdRol()==3){
+                    System.out.println("This is your Crew Assistant #1 select");
+                    showEmployeeService.showEmployee(optionalCrewAssistant2.get());
+                    break;
+                }else{
+                    System.out.println("Invalid input, try again");
+                    sc.nextLine();
+                    continue;
+                }
             }else{
                 System.out.println("Invalid input, try again");
                 sc.nextLine();
