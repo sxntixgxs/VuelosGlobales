@@ -8,4 +8,5 @@ public interface EmployeeVerificationRepository {
     public List<String> getCountry();
     public List<String> getEmployee();
     public List<String> getRol();
+    public List<String> getEmployeeByRolId(int idRol);
 }

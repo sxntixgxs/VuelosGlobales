@@ -1,6 +1,7 @@
 package com.vuelosglobales.flight.trip.infrastructure.controllers;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -16,11 +17,13 @@ public class TripController {
     private final TripService tripService;
     private final ShowEnteredDataService showEnteredDataService;
     private final PlaneServiceImp planeService;
-    public TripController(CrewService crewService, TripService tripService,ShowEnteredDataService showEnteredDataService,PlaneServiceImp planeServiceImp) {
+    private final CrewController crewController;
+    public TripController(CrewService crewService, TripService tripService,ShowEnteredDataService showEnteredDataService,PlaneServiceImp planeServiceImp,CrewController crewController) {
         this.crewService = crewService;
         this.tripService = tripService;
         this.showEnteredDataService = showEnteredDataService;
         this.planeService = planeServiceImp;
+        this.crewController = crewController;
     }
     public void assignCrewToTrip(){
         Scanner sc = new Scanner(System.in);
@@ -50,15 +53,46 @@ public class TripController {
         }
         // receivedTripList.forEach(System.out::println);
         // sc.nextLine();
+        while(true){
+
+            System.out.println("1. Show crew info ...");
+            System.out.println("2. Show plane info ...");
+            System.out.println("10. Exit ...");
+            try{
+                int choice = sc.nextInt();
+                switch (choice) {
+                    case 1:
+                        int idCrew = Integer.valueOf(selectedTrip.get(3));
+                        if(idCrew==0){
+                            System.out.println("Assign crew: ");
+                            crewController.createCrew();
+
+                        }else{
+                            System.out.println("CREW DATA: ");
+                            crewService.showCrew(idCrew);
+                        }
+                        break;
+                    case 2:
+                        showEnteredDataService.showPlaneEntered(planeService.findPlaneById(selectedTrip.get(6)).get());
+                        break;
+                    case 10:
+                        break;
+                    default:
+                        break;
+                }
+            }catch(InputMismatchException e){
+                System.out.println("Invalid input, try again! ");
+                sc.nextLine();
+                continue;
+            }
+        }
         //obtener crew
-        int idCrew = Integer.valueOf(selectedTrip.get(3));
-        System.out.println("CREW DATA: ");
-        crewService.showCrew(idCrew);
+
         // crewService.showCrew(receivedTripList.get(3));
         // // System.out.println(Integer.valueOf(receivedTripList.get(3)));
         // crewService.showCrew(Integer.valueOf(receivedTripList.get(3)));
         // sc.nextLine();
         //obtener Plane
-        showEnteredDataService.showPlaneEntered(planeService.findPlaneById(selectedTrip.get(6)).get());
+
     }
 }

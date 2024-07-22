@@ -87,7 +87,7 @@ public class EmployeeVerifyRepoImp implements EmployeeVerificationRepository{
             PreparedStatement preparedStatement = connection.prepareStatement(query)
         ){
             ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
+            while(resultSet.next()){
                 String employee ="ID: "+resultSet.getString("E.idUser")+" "+resultSet.getString("UR.rol");
                 employeeList.add(employee);
             }
@@ -114,6 +114,27 @@ public class EmployeeVerifyRepoImp implements EmployeeVerificationRepository{
         }catch(SQLException e){
             e.printStackTrace();
             throw new RuntimeException("DB error: "+e.getMessage(),e);
+        }
+    }
+
+    @Override
+    public List<String> getEmployeeByRolId(int idRol) {
+        String query = "SELECT E.idUser,UR.rol FROM employee E INNER JOIN user U ON E.idUser = U.id INNER JOIN userRoles UR ON U.idRol = UR.id WHERE U.idRol = ?";
+        List<String> employeeList = new ArrayList<>();
+        try(
+            Connection connection = dbConnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query)
+        ){
+            preparedStatement.setInt(1, idRol);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                String employee ="ID: "+resultSet.getString("E.idUser")+" "+resultSet.getString("UR.rol");
+                employeeList.add(employee);
+            }
+            return employeeList;
+        }catch(SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException("DB Error: "+e.getMessage(),e);
         }
     }
 }

@@ -11,6 +11,7 @@ import com.vuelosglobales.flight.employee.domain.models.Employee;
 import com.vuelosglobales.flight.employee.domain.ports.out.EmployeeRepository;
 import com.vuelosglobales.flight.employee.domain.ports.out.EmployeeVerificationRepository;
 import com.vuelosglobales.flight.employee.infrastructure.controllers.CrewController;
+import com.vuelosglobales.flight.employee.infrastructure.controllers.VerificationController;
 import com.vuelosglobales.flight.employee.infrastructure.repositories.CrewRepositoryImp;
 import com.vuelosglobales.flight.employee.infrastructure.repositories.EmployeeRepositoryImp;
 import com.vuelosglobales.flight.employee.infrastructure.repositories.EmployeeVerifyRepoImp;
@@ -67,8 +68,9 @@ public class Main {
         CrewService crewService = new CrewService(showEmployeeService,employeeRepository,crewRepository); 
         TripRepositoryImp tripRepository = new TripRepositoryImp(dbConnection);
         TripService tripService = new TripService(tripRepository);
-
-        TripController tripController = new TripController(crewService, tripService, showEnteredDataService, planeService);
+        VerificationController verificationController = new VerificationController(employeeVerificationServiceImp);
+        CrewController crewController = new CrewController(crewService, employeeRepository, verificationController, showEmployeeService, searchUser);
+        TripController tripController = new TripController(crewService, tripService, showEnteredDataService, planeService,crewController);
 
 
         while (true) {

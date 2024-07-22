@@ -38,5 +38,10 @@ public class EmployeeVerificationServiceImp implements EmployeeVerificationServi
     public List<String> getRoles() {
         return verificationRepository.getRol();
     }
+
+    @Override
+    public List<String> getEmployeesByRolId(int idRol) {
+        return verificationRepository.getEmployeeByRolId(idRol);
+    }
     
 }

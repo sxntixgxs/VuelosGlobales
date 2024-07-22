@@ -8,4 +8,5 @@ public interface EmployeeVerificationService {
     List<String> getCountries();
     List<String> getEmployees();
     List<String> getRoles();
+    List<String> getEmployeesByRolId(int idRol);
 }

@@ -3,6 +3,7 @@ package com.vuelosglobales.flight.employee.application.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Scanner;
 
 import com.vuelosglobales.flight.employee.domain.models.Crew;
 import com.vuelosglobales.flight.employee.domain.models.Employee;
@@ -57,12 +58,22 @@ public class CrewService implements CrewOperations {
     }
     @Override
     public void showCrew(int idCrew) {
+        Scanner sc = new Scanner(System.in);
         Optional<Crew> optionalCrew = findCrewById(idCrew);
         if(optionalCrew.isPresent()){
+            System.out.println("·························");
             employeeRepository.findEmployeeById(optionalCrew.get().getIdPilot()).ifPresent(showEmployeeService::showEmployee);
+            System.out.println("·························");
+            sc.nextLine();
             employeeRepository.findEmployeeById(optionalCrew.get().getIdCopilot()).ifPresent(showEmployeeService::showEmployee);
+            System.out.println("·························");
+            sc.nextLine();
             employeeRepository.findEmployeeById(optionalCrew.get().getCrewLeader()).ifPresent(showEmployeeService::showEmployee);
+            System.out.println("·························");
+            sc.nextLine();
             employeeRepository.findEmployeeById(optionalCrew.get().getCrewAssistant()).ifPresent(showEmployeeService::showEmployee);
+            System.out.println("·························");
+            sc.nextLine();
             employeeRepository.findEmployeeById(optionalCrew.get().getCrewAssistant2()).ifPresent(showEmployeeService::showEmployee);
         }
     }

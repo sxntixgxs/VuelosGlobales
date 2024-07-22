@@ -28,4 +28,8 @@ public class VerificationController {
         List<String> employeList = verificationServiceImp.getEmployees();
         employeList.forEach(System.out::println);
     }
+    public void showEmployeesByRolId(int idRol){
+        List<String> employeeList = verificationServiceImp.getEmployeesByRolId(idRol);
+        employeeList.forEach(System.out::println);
+    }
 }

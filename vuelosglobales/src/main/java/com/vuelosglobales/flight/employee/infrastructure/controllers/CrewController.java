@@ -35,6 +35,7 @@ public class CrewController {
     
     public void createCrew(){
         Scanner sc = new Scanner(System.in);
+        List<String> selectedList = new ArrayList<>();
         String idPilot = "";
         String idCopilot = "";
         String idCrewLeader = "";
@@ -42,10 +43,12 @@ public class CrewController {
         String idCrewAssistant2 = "";
         while(true){
             System.out.println("Enter the Pilot ID : ");
-            verificationController.showEmployees();
+            //verificationController.showEmployees();//este show employees puede ser más especifico, que muestre o tenga más metodos para seleccionar pilot, copilot, crewassistant, dependiendo
+            verificationController.showEmployeesByRolId(3);
             idPilot = sc.nextLine();
             Optional<Employee> optionalPilot = employeeRepository.findEmployeeById(idPilot);
             if(optionalPilot.isPresent()){
+                selectedList.add(idPilot);
                 System.out.println("This is your Pilot select");
                 showEmployeeService.showEmployee(optionalPilot.get());
                 sc.nextLine();
@@ -58,85 +61,105 @@ public class CrewController {
         }
         while(true){
             System.out.println("Enter the Copilot ID: ");
-            verificationController.showEmployees();
+            verificationController.showEmployeesByRolId(3);
             idCopilot = sc.nextLine();
             Optional<Employee> optionalCopilot = employeeRepository.findEmployeeById(idCopilot);
-            if(optionalCopilot.isPresent()){
+            if(optionalCopilot.isPresent() && !selectedList.contains(idCopilot)){
+                selectedList.add(idCopilot);
                 System.out.println("This is your Copilot select");
                 showEmployeeService.showEmployee(optionalCopilot.get());
                 sc.nextLine();
                 break;
             }else{
                 System.out.println("Invalid input, try again");
+                System.out.println("These are your previous selections: ");
+                selectedList.forEach(System.out::println);
                 sc.nextLine();
                 continue;
             }
         }
         while(true){
             System.out.println("Enter the Crew Leader ID: ");
-            verificationController.showEmployees();
+            verificationController.showEmployeesByRolId(2);
             idCrewLeader = sc.nextLine();
             Optional<Employee> optionalCrewLeader = employeeRepository.findEmployeeById(idCrewLeader);
             if(optionalCrewLeader.isPresent()){
                 Optional<User> optionalUser = searchUserImpl.searchUser(optionalCrewLeader.get().getIdUser());
-                if(optionalUser.get().getIdRol()==2 || optionalUser.get().getIdRol()==3){
+                if(optionalUser.get().getIdRol()==2  && !selectedList.contains(idCrewLeader)){
+                    selectedList.add(idCrewLeader);
                     System.out.println("This is your Crew Leader select ");
                     showEmployeeService.showEmployee(optionalCrewLeader.get());
                     sc.nextLine();
                     break;
                 }else{
                     System.out.println("Invalid input, try again");
+                    System.out.println("These are your previous selections: ");
+                    selectedList.forEach(System.out::println);
                     sc.nextLine();
                     continue;
                 }
 
             }else{
                 System.out.println("Invalid input, try again");
+                System.out.println("These are your previous selections: ");
+                selectedList.forEach(System.out::println);
                 sc.nextLine();
                 continue;
             }
         }while(true){
             System.out.println("Enter the Crew Assistant #1 ID: ");
-            verificationController.showEmployees();
+            verificationController.showEmployeesByRolId(2);
             idCrewAssistant = sc.nextLine();
             Optional<Employee> optionalCrewAssistant = employeeRepository.findEmployeeById(idCrewAssistant);
             if(optionalCrewAssistant.isPresent()){
                 Optional<User> optionalUser = searchUserImpl.searchUser(optionalCrewAssistant.get().getIdUser());
-                if(optionalUser.get().getIdRol()==2||optionalUser.get().getIdRol()==3){
+                if(optionalUser.get().getIdRol()==2 && !selectedList.contains(idCrewAssistant)){
+                    selectedList.add(idCrewAssistant);
                     System.out.println("This is your Crew Assistant #1 select");
                     showEmployeeService.showEmployee(optionalCrewAssistant.get());
                     break;
                 }else{
                     System.out.println("Invalid input, try again");
+                    System.out.println("These are your previous selections: ");
+                    selectedList.forEach(System.out::println);
                     continue;
                 }
             }else{
                 System.out.println("Invalid input, try again");
+                System.out.println("These are your previous selections: ");
+                selectedList.forEach(System.out::println);
                 sc.nextLine();
                 continue;
             }
         }while(true){
             System.out.println("Enter the Crew Assistant #2 ID: ");
-            verificationController.showEmployees();
+            verificationController.showEmployeesByRolId(2);
             idCrewAssistant2 = sc.nextLine();
             Optional<Employee> optionalCrewAssistant2 = employeeRepository.findEmployeeById(idCrewAssistant2);
             if(optionalCrewAssistant2.isPresent()){
                 Optional<User> optionalUser = searchUserImpl.searchUser(optionalCrewAssistant2.get().getIdUser());
-                if(optionalUser.get().getIdRol()==2||optionalUser.get().getIdRol()==3){
+                if(optionalUser.get().getIdRol()==2 && !selectedList.contains(idCrewAssistant2)){
+                    selectedList.add(idCrewAssistant2);
                     System.out.println("This is your Crew Assistant #1 select");
                     showEmployeeService.showEmployee(optionalCrewAssistant2.get());
                     break;
                 }else{
                     System.out.println("Invalid input, try again");
+                    System.out.println("These are your previous selections: ");
+                    selectedList.forEach(System.out::println);
                     sc.nextLine();
                     continue;
                 }
             }else{
                 System.out.println("Invalid input, try again");
+                System.out.println("These are your previous selections: ");
+                selectedList.forEach(System.out::println);
                 sc.nextLine();
                 continue;
             }
-        }  Optional<Integer> optionalCrewID = crewService.createCrew(idPilot, idCopilot, idCrewLeader, idCrewAssistant, idCrewAssistant2);
+        }  
+        System.out.println("FINALIZO LA CREACION DE CREW!!!!! ");
+        Optional<Integer> optionalCrewID = crewService.createCrew(idPilot, idCopilot, idCrewLeader, idCrewAssistant, idCrewAssistant2);
         if(optionalCrewID.isPresent()){
             System.out.println("Crew saved with ID -> "+optionalCrewID.get());
         }

@@ -22,7 +22,7 @@ public class ShowEmployeeRepositoryImp implements ShowEmployeeRepository{
         System.out.println("Airport  -> "+verificationRepository.getAirport().get(employee.getIdAirport()-1));
         Optional<User> optionalUser = searchUserImpl.searchUser(employee.getIdUser());
         if(optionalUser.isPresent()){
-            System.out.println(optionalUser.get().getName()+" "+optionalUser.get().getSurname()+" "+verificationRepository.getRol().get(optionalUser.get().getIdRol()));
+            System.out.println(optionalUser.get().getName()+" "+optionalUser.get().getSurname()+" "+verificationRepository.getRol().get(optionalUser.get().getIdRol()-1));//pongo el -1 para que muestre el rol correcto 
             // System.out.println(verificationRepository.getRol());
             // System.out.println(verificationRepository.getRol().get(optionalUser.get().getIdRol()));
         }

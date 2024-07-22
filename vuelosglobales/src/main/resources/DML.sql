@@ -1,119 +1,91 @@
-INSERT INTO userRoles(
-    id,rol
-)VALUES(
-    1,'admin'
-);
+USE airport;
+-- Insertar valores en la tabla userRoles
+INSERT INTO userRoles (rol) VALUES ('admin'), ('crew member'), ('pilot'), ('sales'), ('customer'), ('maintenance technician');
 
-INSERT INTO user(
-    id,name,surname,email,password,idRol
-) VALUES(
-    '1005153789','Santiago','Sandoval','sandoval@santiago.tt','123',1
-);
--- RESTART 
-INSERT INTO status (name) VALUES ('Available');
-INSERT INTO status (name) VALUES ('In Maintenance');
-INSERT INTO status (name) VALUES ('Out of Service');
-INSERT INTO status (name) VALUES ('Reserved');
+-- Insertar valores en la tabla user
+INSERT INTO user (id, name, surname, email, password, idRol) VALUES
+('1005153789', 'Santiago', 'Sandoval', 'sandoval@santiago.tt', '123', 1),
+('Y1234Z', 'Emmanuel', 'Gazmey', 'emma@gazm.pr', '12345678', 2),
+('A321X', 'Hector', 'Delgado', 'delgado@father.pr', '12345678', 2),
+('Z123Y', 'Lewis', 'Days', 'lewis@days.co', '12345678', 3),
+('A123X', 'Rafael', 'Dudamel', 'dudamel@rafa.bga', '12345678', 3),
+('Y432Z', 'Ricardo', 'Arroyo', 'arroyo@ricardo.co', '12345678', 3),
+('Z321Y', 'Black', 'Man', 'black@man.uk', '12345678', 4),
+('X123Y', 'Kevin', 'Roldan', 'mr@roldan.kr', '12345678', 6),
+('X321Y', 'Benito', 'Martinez', 'benito@bad.pr', '12345678', 2);
 
+-- Insertar valores en la tabla status
+INSERT INTO status (name) VALUES ('Available'), ('In Maintenance'), ('Out of Service'), ('Reserved');
 
 -- Insertar valores en la tabla airline
-INSERT INTO airline (name) VALUES ('Avianca');
-INSERT INTO airline (name) VALUES ('Emirates');
-INSERT INTO airline (name) VALUES ('LATAM');
-INSERT INTO airline (name) VALUES ('American Airlines');
-INSERT INTO airline (name) VALUES ('Delta Air Lines');
--- Insertar valores en la tabla manufacturer
-INSERT INTO manufacturer (name) VALUES ('Boeing');
-INSERT INTO manufacturer (name) VALUES ('Airbus');
+INSERT INTO airline (name) VALUES ('Avianca'), ('Emirates'), ('LATAM'), ('American Airlines'), ('Delta Air Lines');
 
+-- Insertar valores en la tabla manufacturer
+INSERT INTO manufacturer (name) VALUES ('Boeing'), ('Airbus');
 
 -- Insertar valores en la tabla model
--- Para Boeing (idManufacturer = 1)
-INSERT INTO model (name, idManufacturer) VALUES ('737-800', 1);
-INSERT INTO model (name, idManufacturer) VALUES ('787-8', 1);
-INSERT INTO model (name, idManufacturer) VALUES ('777-200', 1);
-INSERT INTO model (name, idManufacturer) VALUES ('747-8', 1);
+INSERT INTO model (name, idManufacturer) VALUES 
+('737-800', 1), 
+('787-8', 1), 
+('777-200', 1), 
+('747-8', 1), 
+('A320', 2), 
+('A330-300', 2), 
+('A350-900', 2);
 
--- Para Airbus (idManufacturer = 2)
-INSERT INTO model (name, idManufacturer) VALUES ('A320', 2);
-INSERT INTO model (name, idManufacturer) VALUES ('A330-300', 2);
-INSERT INTO model (name, idManufacturer) VALUES ('A350-900', 2);
+-- Insertar valores en la tabla country
+INSERT INTO country (name) VALUES ('Colombia'), ('USA'), ('Canada');
 
--- PAISES
-INSERT INTO country (name) VALUES
-('Colombia'),
-('USA'),
-('Canada');
-
--- CIUDADES
-INSERT INTO city (name, idCountry) VALUES
-('Bogotá', 1),
-('New York', 2),
-('Toronto', 3),
+-- Insertar valores en la tabla city
+INSERT INTO city (name, idCountry) VALUES 
+('Bogotá', 1), 
+('New York', 2), 
+('Toronto', 3), 
 ('Los Angeles', 2);
--- ROUTES
-INSERT INTO route (idDepature, idArrival) VALUES
-(1, 2),  -- Bogotá to New York
-(1, 3),  -- Bogotá to Toronto
-(1, 4),  -- Bogotá to Los Angeles
-(2, 1),  -- New York to Bogotá
-(2, 3),  -- New York to Toronto
-(2, 4),  -- New York to Los Angeles
-(3, 1),  -- Toronto to Bogotá
-(3, 2),  -- Toronto to New York
-(3, 4),  -- Toronto to Los Angeles
-(4, 1),  -- Los Angeles to Bogotá
-(4, 2),  -- Los Angeles to New York
-(4, 3);  -- Los Angeles to Toronto
---AIRPORT
-INSERT INTO airport (name, idCity) VALUES
-('El Dorado International Airport', 1),
-('John F. Kennedy International Airport', 2),
-('Toronto Pearson International Airport', 3),
+
+-- Insertar valores en la tabla route
+INSERT INTO route (idDepature, idArrival) VALUES 
+(1, 2), -- Bogotá to New York
+(1, 3), -- Bogotá to Toronto
+(1, 4), -- Bogotá to Los Angeles
+(2, 1), -- New York to Bogotá
+(2, 3), -- New York to Toronto
+(2, 4), -- New York to Los Angeles
+(3, 1), -- Toronto to Bogotá
+(3, 2), -- Toronto to New York
+(3, 4), -- Toronto to Los Angeles
+(4, 1), -- Los Angeles to Bogotá
+(4, 2), -- Los Angeles to New York
+(4, 3); -- Los Angeles to Toronto
+
+-- Insertar valores en la tabla airport
+INSERT INTO airport (name, idCity) VALUES 
+('El Dorado International Airport', 1), 
+('John F. Kennedy International Airport', 2), 
+('Toronto Pearson International Airport', 3), 
 ('Los Angeles International Airport', 4);
---TRIP STATUS
-INSERT INTO tripStatus (status) VALUES
-('Confirmed'),
-('Pending Crew');
 
---LOS DEMAS ROLES
-INSERT INTO userRoles(
-    id,rol
-)VALUES(
-    2,'crew member',
-    3,'pilot',
-    4,'sales',
-    5,'customer',
-    6,'maintenance technician'
-);
+-- Insertar valores en la tabla tripStatus
+INSERT INTO tripStatus (status) VALUES ('Confirmed'), ('Pending Crew');
 
--- MAS USUARIOS
-INSERT INTO user(
-    id,name,surname,email,password,idRol
-)VALUES(
-    'Y1234Z','Emmanuel','Gazmey','emmma@gazm.pr','123',2
-),(
-    'Y432Z','Ricardo','Arroyo','arroyo@ricardo.co','123',3
-),
-(
-    'Z123Y','Lewis','Days','lewis@days.co','123',3
-),
-(
-    'Z321Y','Black','Man','black@man.uk','123',4
-),
-(
-    'X123Y','Kevin','Roldan','mr@roldan.kr','123',6
-),
-(
-    'X321Y','Benito','Martinez','benito@bad.pr','123',2
-),
-(
-    'A321X','Hector','Delgado','delgado@father.pr','123',2
-)
-(
-    'A123X','Rafael','Dudamel','dudamel@rafa.bga','123',2
-);
+-- Insertar valores en la tabla plane
+INSERT INTO plane (id, capacity, fabrication, idStatus, idAirline, idModel) VALUES 
+('PL001', 180, '2015-05-20', 1, 1, 1), -- Boeing 737-800, Avianca, Available
+('PL002', 242, '2016-06-15', 1, 1, 2), -- Boeing 787-8, Avianca, Available
+('PL003', 396, '2017-07-25', 2, 2, 3), -- Boeing 777-200, Emirates, In Maintenance
+('PL004', 467, '2018-08-30', 1, 2, 4), -- Boeing 747-8, Emirates, Available
+('PL005', 150, '2019-09-10', 1, 3, 5), -- Airbus A320, LATAM, Available
+('PL006', 335, '2020-10-12', 1, 3, 6), -- Airbus A330-300, LATAM, Available
+('PL007', 325, '2021-11-05', 1, 4, 7); -- Airbus A350-900, American Airlines, Available
 
+-- Insertar valores en la tabla trip
+INSERT INTO trip (idRoute, idCrew, date, idStatus, idPlane) VALUES 
+(1, NULL, '2024-07-20', 2, 'PL001'), -- Bogotá to New York, Pending Crew, PL001
+(2, NULL, '2024-07-21', 2, 'PL002'), -- New York to Toronto, Pending Crew, PL002
+(3, NULL, '2024-07-22', 2, 'PL005'), -- Toronto to Los Angeles, Pending Crew, PL005
+(4, NULL, '2024-07-23', 2, 'PL007'); -- Los Angeles to Bogotá, Pending Crew, PL007
+
+-- Insertar empleados en diferentes aerolíneas y aeropuertos
 -- Empleados en Avianca (idAirline = 1)
 INSERT INTO employee (idUser, idAirport, idAirline, idCountry, admissionDate) VALUES
 ('Y1234Z', 1, 1, 1, '2024-01-10'),  -- Emmanuel Gazmey, Bogotá, Avianca
@@ -138,16 +110,8 @@ INSERT INTO employee (idUser, idAirport, idAirline, idCountry, admissionDate) VA
 ('X321Y', 4, 5, 2, '2024-08-05');  -- Benito Martinez, Los Angeles, Delta Air Lines
 
 
--- Insertar tres viajes pendientes de tripulación
-
--- Viaje 1: Bogotá to New York
-INSERT INTO trip (idRoute, date, idStatus) VALUES
-(1, '2024-07-20', 2); -- Estado: Pending Crew
-
--- Viaje 2: New York to Toronto
-INSERT INTO trip (idRoute, date, idStatus) VALUES
-(2, '2024-07-21', 2); -- Estado: Pending Crew
-
--- Viaje 3: Toronto to Los Angeles
-INSERT INTO trip (idRoute, date, idStatus) VALUES
-(3, '2024-07-22', 2); -- Estado: Pending Crew
+-- Insertar valores en la tabla crew
+INSERT INTO crew (idPilot, idCopilot, idCrewLeader, idCrewAssistant, idCrewAssistant2) VALUES
+('Z123Y', 'Y432Z', 'Z321Y', 'A321X', 'X123Y'), -- Crew 1
+('X321Y', 'Z321Y', 'Y432Z', 'A123X', 'Y1234Z'), -- Crew 2
+('A123X', 'A321X', 'X123Y', 'Z123Y', 'Y432Z'); -- Crew 3
