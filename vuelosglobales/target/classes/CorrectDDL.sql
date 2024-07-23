@@ -122,3 +122,47 @@ CREATE TABLE trip(
     FOREIGN KEY (idStatus) REFERENCES status(id),
     FOREIGN KEY (idPlane) REFERENCES plane(id)
 );
+
+-- Ahora, para más casos de usos hay escalas
+-- entonces, trip apunta a otra tabla que se llame vuelos y seria una -- relación n:m porque un trip puede tener varios vuelos 
+-- escalas- y los valores de otras columnas, serían cliente, tarifa!
+CREATE TABLE typeDocument(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    typeDoc VARCHAR(20) NOT NULL
+);
+-- un cliente no necesariamente tiene que tener usuario, por lo cual, el id va a ser diferente
+CREATE TABLE customer( 
+    id VARCHAR(20) PRIMARY KEY,
+    idTypeDoc INT NOT NULL,
+    name VARCHAR(20) NOT NULL,
+    surname VARCHAR(20) NOT NULL,
+    age INT NOT NULL,
+    FOREIGN KEY (idTypeDoc) REFERENCES typeDocument(id)
+);
+-- el TRIP / TRAYECTO al que pertenece
+-- esta fecha debe ser mayor a trip
+CREATE TABLE flightScales(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    idScaleCity INT NOT NULL,
+    idTrip INT NOT NULL, 
+    date DATE NOT NULL, 
+    FOREIGN KEY (idScaleCity) REFERENCES city(id),
+    FOREIGN KEY (idTrip) REFERENCES trip(id)
+);
+
+CREATE TABLE flightFare(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(30) NOT NULL,
+    details TEXT,
+    amount INT NOT NULL
+);
+-- economic, plus, bussiness
+CREATE TABLE flightReservation(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    idCustomer VARCHAR(20) NOT NULL,
+    idTrip INT NOT NULL,
+    idFlightFare INT NOT NULL,
+    FOREIGN KEY (idCustomer) REFERENCES customer(id),
+    FOREIGN KEY (idTrip) REFERENCES trip(id),
+    FOREIGN KEY (idFlightFare) REFERENCES flightFare(id)
+);

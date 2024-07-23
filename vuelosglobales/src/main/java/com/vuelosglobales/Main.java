@@ -4,6 +4,14 @@ import java.util.InputMismatchException;
 import java.util.Optional;
 import java.util.Scanner;
 
+import com.vuelosglobales.flight.customer.application.services.CustomerService;
+import com.vuelosglobales.flight.customer.domain.models.Customer;
+import com.vuelosglobales.flight.customer.domain.ports.out.ShowCustomerRepository;
+import com.vuelosglobales.flight.customer.domain.ports.out.ShowDocTypesRepository;
+import com.vuelosglobales.flight.customer.infrastructure.controllers.CustomerController;
+import com.vuelosglobales.flight.customer.infrastructure.repositories.CustomerRepositoryImp;
+import com.vuelosglobales.flight.customer.infrastructure.repositories.ShowCustomerRepositoryImp;
+import com.vuelosglobales.flight.customer.infrastructure.repositories.ShowDocTypesRepositoryImp;
 import com.vuelosglobales.flight.employee.application.services.CrewService;
 import com.vuelosglobales.flight.employee.application.services.EmployeeVerificationServiceImp;
 import com.vuelosglobales.flight.employee.application.services.ShowEmployeeService;
@@ -72,7 +80,12 @@ public class Main {
         CrewController crewController = new CrewController(crewService, employeeRepository, verificationController, showEmployeeService, searchUser);
         TripController tripController = new TripController(crewService, tripService, showEnteredDataService, planeService,crewController);
 
-
+        //Customer dependencies
+        CustomerRepositoryImp customerRepository = new CustomerRepositoryImp(dbConnection);
+        ShowDocTypesRepositoryImp showDocTypesRepository = new ShowDocTypesRepositoryImp(dbConnection);
+        ShowCustomerRepositoryImp showCustomerRepository = new ShowCustomerRepositoryImp(dbConnection);
+        CustomerService customerService = new CustomerService(customerRepository, showDocTypesRepository, showCustomerRepository);
+        CustomerController customerController = new CustomerController(customerService);
         while (true) {
             System.out.println("For login press x");
             String start = sc.nextLine().toUpperCase();
@@ -82,16 +95,19 @@ public class Main {
                 Optional<Integer> roleId = login(userController);
                 if (roleId.isPresent()) {
                     System.out.println("Login successful. Role ID: " + roleId.get());
-                    while (true) {
-                        boolean continueSession = displayMenu(roleId.get(), planeController,tripController);
-                        if (!continueSession) {
-                            break; // Exit the inner loop to log in again or exit the program
-                        }
-                        System.out.println("Do you want to perform another action? (yes/no): ");
-                        String continueOption = sc.next().trim().toLowerCase();
-                        if (!continueOption.equals("yes")) {
-                            break; // Exit the inner loop to log in again or exit the program
-                        }
+                    boolean flag = false;
+                    while (!flag) {
+                        boolean continueSession = displayMenu(roleId.get(), planeController,tripController,customerController);
+                        if(!continueSession) {
+                             flag = true; // Exit the inner loop to log in again or exit the program //cambios
+                         }else{
+                            System.out.println("Do you want to perform another action? (yes/no): ");
+                            String continueOption = sc.next().trim().toLowerCase();
+                            if (!continueOption.equals("yes")) {
+                                flag = true; // Exit the inner loop to log in again or exit the program //cambios
+                            }
+                         }
+
                         sc.nextLine(); // Consume newline
                     }
                 } else {
@@ -108,7 +124,6 @@ public class Main {
 
         sc.close();
     }
-
     public static Optional<Integer> login(UserController userController) {
         System.out.println("Login ~ VuelosGlobales");
         sc.nextLine(); // Consume newline
@@ -119,70 +134,135 @@ public class Main {
         return userController.login(id, password);
     }
 
-    public static boolean displayMenu(int roleId, PlaneController planeController,TripController tripController) {
+    public static boolean displayMenu(int roleId, PlaneController planeController, TripController tripController, CustomerController customerController) {
         switch (roleId) {
             case 1:
                 boolean continueSession = true;
                 while (continueSession) {
                     int choice = adminMenu();
                     switch (choice) {
-                    case 1:
-                        int planeChoice = planeMenu();
-                        switch (planeChoice) {
-                            case 1:
-                                planeController.createPlane();
-                                break;
-                            case 2:
-                                planeController.updatePlane();
-                                break;
-                            case 3:
-                                planeController.deletePlaneById();
-                                break;
-                            case 4:
-                                planeController.checkPlaneById();
-                                break;
-                            default:
-                                System.out.println("Invalid option.");
-                                break;
-                        }
-                        break;
-                    case 2:
-                        /*
-                         * 1. mostrar trips disponibles
-                         * 2. elegir trayecto
-                         * 3. mostrar todos los empleados disponibles
-                         * 4. elegir empleados
-                         * 5. guardar en DB
-                         * 6. confirmar action UI
-                         */
-                        int tripChoice = tripMenu();
-                        switch (tripChoice) {
-                            case 1:
-                                tripController.assignCrewToTrip();
-                                break;
-                        
-                            default:
-                            System.out.println("Invalid option");
-                                break;
-                        }
-                    case 10:
-                        System.out.println("Exiting the program...");
-                        continueSession = false;
-                        break; // Exit the session
-                    default:
-                        System.out.println("Invalid menu option.");
-                        break;
+                        case 1: // plane
+                            int planeChoice = planeMenu();
+                            switch (planeChoice) {
+                                case 1:
+                                    planeController.createPlane();
+                                    break;
+                                case 2:
+                                    planeController.updatePlane();
+                                    break;
+                                case 3:
+                                    planeController.deletePlaneById();
+                                    break;
+                                case 4:
+                                    planeController.checkPlaneById();
+                                    break;
+                                default:
+                                    System.out.println("Invalid option.");
+                                    break;
+                            }
+                            break;
+                        case 2: // trip
+                            /*
+                             * 1. mostrar trips disponibles
+                             * 2. elegir trayecto
+                             * 3. mostrar todos los empleados disponibles
+                             * 4. elegir empleados
+                             * 5. guardar en DB
+                             * 6. confirmar action UI
+                             */
+                            int tripChoice = tripMenu();
+                            switch (tripChoice) {
+                                case 1:
+                                    tripController.assignCrewToTrip();
+                                    break;
+                                default:
+                                    System.out.println("Invalid option");
+                                    break;
+                            }
+                            break;
+                        // case 4: // sales
+                        //     System.out.println("hago algo");
+                        //     int salesChoice = salesMenu();
+                        //     switch (salesChoice) {
+                        //         case 1:
+                        //             /*
+                        //              * ingresar cl
+                        //              * trayecto - mostrar y elegir
+                        //              * tarifa - mostrar y elegir
+                        //              */
+                        //             // ingresar cl
+                        //             //CustomerController.add
+                        //             customerController.addCustomer();
+                        //             break;
+                        //         default:
+                        //             System.out.println("Invalid option.");
+                        //             break;
+                        //     }
+                        //     break; // break added here to prevent falling through to case 10
+                        case 10:
+                            System.out.println("Exiting the program...");
+                            continueSession = false;
+                            break; // Exit the session
+                        default:
+                            System.out.println("Invalid menu option.");
+                            break;
+                    }
                 }
                 break;
+            case 4: // New sales case at the same level as case 1
+                System.out.println("Sales role identified.");
+                boolean continueSalesSession = true;
+                while (continueSalesSession) {
+                    int salesChoice = salesMenu();
+                    switch (salesChoice) {
+                        case 1:
+                            /*
+                             * ingresar cl
+                             * trayecto - mostrar y elegir
+                             * tarifa - mostrar y elegir
+                             */
+                            customerController.addCustomer();
+                            break;
+                        case 10:
+                            System.out.println("Exiting the program...");
+                            continueSalesSession = false;
+                            break; // Exit the session
+                        default:
+                            System.out.println("Invalid menu option.");
+                            break;
+                    }
                 }
-
-                
+                break;
             default:
+                System.out.println("Invalid role ID.");
                 break;
         }
         return true; // Continue the session
     }
+    
+    
 
+    public static int salesMenu(){
+        int choice;
+        while(true){
+            System.out.println("1. Create flight reservation");
+            System.out.println("more options ...");
+            try {
+                choice = sc.nextInt();
+                if(choice<1 || choice > 4){
+                    System.out.println("Invalid input, try again");
+                    continue;
+                }else{
+                    break;
+                }
+                
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input, try again ");
+                continue;
+            }
+        }
+        return choice;
+    }
     public static int adminMenu() {
         System.out.println("1. Plane actions");
         System.out.println("2. Trip actions");

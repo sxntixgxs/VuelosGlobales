@@ -1,6 +1,11 @@
 USE airport;
 -- Insertar valores en la tabla userRoles
-INSERT INTO userRoles (rol) VALUES ('admin'), ('crew member'), ('pilot'), ('sales'), ('customer'), ('maintenance technician');
+INSERT INTO userRoles (rol) VALUES ('admin'),
+ ('crew member'),
+  ('pilot'),
+   ('sales'),
+    ('customer'),
+     ('maintenance technician');
 
 -- Insertar valores en la tabla user
 INSERT INTO user (id, name, surname, email, password, idRol) VALUES
@@ -115,3 +120,7 @@ INSERT INTO crew (idPilot, idCopilot, idCrewLeader, idCrewAssistant, idCrewAssis
 ('Z123Y', 'Y432Z', 'Z321Y', 'A321X', 'X123Y'), -- Crew 1
 ('X321Y', 'Z321Y', 'Y432Z', 'A123X', 'Y1234Z'), -- Crew 2
 ('A123X', 'A321X', 'X123Y', 'Z123Y', 'Y432Z'); -- Crew 3
+
+INSERT INTO typeDocument (typeDoc) VALUES ('Passport');
+INSERT INTO typeDocument (typeDoc) VALUES ('Foreign ID');
+INSERT INTO typeDocument (typeDoc) VALUES ('National ID');
