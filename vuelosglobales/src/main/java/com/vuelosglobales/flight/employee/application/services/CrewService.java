@@ -24,6 +24,13 @@ public class CrewService implements CrewOperations {
     @Override
     public Optional<Integer> createCrew(String idPilot,String idCopilot, String crewLeader, String crewAssistant, String crewAssistant2){
         //validaciones
+        // System.out.println("pilot -> "+employeeRepository.findEmployeeById(idPilot).isPresent());
+        // System.out.println("Copilot -> "+employeeRepository.findEmployeeById(idCopilot).isPresent());
+        // System.out.println("crewLeader -> "+employeeRepository.findEmployeeById(crewLeader).isPresent());
+        // System.out.println("crewAssistant -> "+employeeRepository.findEmployeeById(crewAssistant).isPresent());
+        // System.out.println("crewAssistant2 -> "+employeeRepository.findEmployeeById(crewAssistant2).isPresent());
+        // Optional<Integer> optionalInt = crewRepository.saveCrew(idPilot, idCopilot, crewLeader, crewAssistant, crewAssistant2);
+        // System.out.println("resultado de .saveCrew "+optionalInt);
         if(employeeRepository.findEmployeeById(idPilot).isPresent() && 
             employeeRepository.findEmployeeById(idCopilot).isPresent() &&
             employeeRepository.findEmployeeById(crewLeader).isPresent() &&

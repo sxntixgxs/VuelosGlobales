@@ -110,7 +110,7 @@ public class EmployeeController {
             Employee emp = new Employee(userId, idAirport, idAirline, idCountry, admissionDate);
             try {
                 showEmployeeService.showEmployee(emp);
-                employeeService.createEmployee(emp);
+                employeeService.createEmployee(emp).isPresent();
             } catch (Exception e) {
                 System.out.println("Error creating employee "+e);
             }

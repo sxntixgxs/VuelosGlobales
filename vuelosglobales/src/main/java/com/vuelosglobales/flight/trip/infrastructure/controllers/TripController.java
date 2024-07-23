@@ -3,12 +3,14 @@ package com.vuelosglobales.flight.trip.infrastructure.controllers;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import com.vuelosglobales.flight.employee.application.services.CrewService;
 import com.vuelosglobales.flight.employee.application.services.EmployeeService;
 import com.vuelosglobales.flight.employee.infrastructure.controllers.CrewController;
 import com.vuelosglobales.flight.trip.application.service.TripService;
+import com.vuelosglobales.flight.trip.domain.models.Trip;
 import com.vuelosglobales.plane.application.services.PlaneServiceImp;
 import com.vuelosglobales.plane.application.services.ShowEnteredDataService;
 
@@ -53,7 +55,8 @@ public class TripController {
         }
         // receivedTripList.forEach(System.out::println);
         // sc.nextLine();
-        while(true){
+        boolean continueLoop = true;
+        while(continueLoop){
 
             System.out.println("1. Show crew info ...");
             System.out.println("2. Show plane info ...");
@@ -63,21 +66,34 @@ public class TripController {
                 switch (choice) {
                     case 1:
                         int idCrew = Integer.valueOf(selectedTrip.get(3));
-                        if(idCrew==0){
+                        //if(idCrew==0){
                             System.out.println("Assign crew: ");
-                            crewController.createCrew();
+                            Optional<Integer> optionalCreated = crewController.createCrew();
+                            if(optionalCreated.isPresent()){
+                                Optional<Trip> updatedTrip = tripService.findTripById(tripId);
+                                if(updatedTrip.isPresent()){
+                                    updatedTrip.get().setIdCrew(optionalCreated.get());
+                                    Optional<Trip> optionalTrip = tripService.updateCrewTrip(updatedTrip.get());
+                                    if(optionalTrip.isPresent()){
+                                        System.out.println("CREW: "+updatedTrip.get().getIdCrew()+"ASSIGNED ON TRIP: "+tripId);
+                                        break;
+                                    }else{
+                                        System.out.println("no se pudo actualizar el trip");
+                                    }
+                                }
+                            }
 
-                        }else{
-                            System.out.println("CREW DATA: ");
-                            crewService.showCrew(idCrew);
-                        }
+                        //}
                         break;
                     case 2:
                         showEnteredDataService.showPlaneEntered(planeService.findPlaneById(selectedTrip.get(6)).get());
+                        sc.nextLine();
                         break;
                     case 10:
+                        continueLoop = false; //rompe el bucle sin cerrar el programa 
                         break;
                     default:
+                    System.out.println("Invalid option");
                         break;
                 }
             }catch(InputMismatchException e){

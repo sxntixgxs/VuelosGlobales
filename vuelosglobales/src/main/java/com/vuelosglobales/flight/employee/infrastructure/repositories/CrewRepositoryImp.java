@@ -31,7 +31,7 @@ public class CrewRepositoryImp implements CrewRepository{
             preparedStatement.setString(4, idCrewAssistant);
             preparedStatement.setString(5, idCrewAssistant2);
             int rowsAff = preparedStatement.executeUpdate();
-            if(rowsAff>1){
+            if(rowsAff>=1){
                 Crew crew = new Crew(idPilot,idCopilot,idCrewLeader,idCrewAssistant,idCrewAssistant2);
                 return findIdCrewByComponents(idPilot, idCopilot, idCrewLeader, idCrewAssistant, idCrewAssistant2);
                 
@@ -96,7 +96,7 @@ public class CrewRepositoryImp implements CrewRepository{
 
     @Override
     public Optional<Integer> findIdCrewByComponents(String idPilot, String idCopilot, String idCrewLeader, String idCrewAssistant, String idCrewAssistant2) {
-        String query = "SELECT id FROM crew WHERE idPilot = ? AND idCopilot = ? AND idCrewLeader = ? AND idCrewAssistant = ? AND idCrewAssistant2";
+        String query = "SELECT id FROM crew WHERE idPilot = ? AND idCopilot = ? AND idCrewLeader = ? AND idCrewAssistant = ? AND idCrewAssistant2 = ?";
         try(
             Connection connection = dbConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(query)

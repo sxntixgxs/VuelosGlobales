@@ -20,8 +20,8 @@ public class TripService implements TripOperations {
     }
 
     @Override
-    public Optional<Trip> updateTrip(Trip trip) {
-        return tripRepository.updateTrip(trip);
+    public Optional<Trip> updateCrewTrip(Trip trip) {
+        return tripRepository.updateCrewTrip(trip);
     }
 
     @Override

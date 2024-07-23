@@ -6,8 +6,8 @@ public class Trip {
     private int idCrew;
     private String date;
     private int idStatus;
-    private int idAirplane;
-    public Trip(int id, int idRoute, int idCrew, String date, int idStatus,int idAirplane) {
+    private String idAirplane;
+    public Trip(int id, int idRoute, int idCrew, String date, int idStatus,String idAirplane) {
         this.id = id;
         this.idRoute = idRoute;
         this.idCrew = idCrew;
@@ -45,10 +45,10 @@ public class Trip {
     public void setIdStatus(int idStatus) {
         this.idStatus = idStatus;
     }
-    public int getIdAirplane() {
+    public String getIdAirplane() {
         return idAirplane;
     }
-    public void setIdAirplane(int idAirplane) {
+    public void setIdAirplane(String idAirplane) {
         this.idAirplane = idAirplane;
     }
 }

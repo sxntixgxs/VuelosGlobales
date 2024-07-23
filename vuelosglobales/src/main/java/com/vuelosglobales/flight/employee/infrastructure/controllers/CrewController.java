@@ -33,7 +33,7 @@ public class CrewController {
         this.searchUserImpl = searchUserImpl;
     }
     
-    public void createCrew(){
+    public Optional<Integer> createCrew(){
         Scanner sc = new Scanner(System.in);
         List<String> selectedList = new ArrayList<>();
         String idPilot = "";
@@ -158,10 +158,12 @@ public class CrewController {
                 continue;
             }
         }  
-        System.out.println("FINALIZO LA CREACION DE CREW!!!!! ");
         Optional<Integer> optionalCrewID = crewService.createCrew(idPilot, idCopilot, idCrewLeader, idCrewAssistant, idCrewAssistant2);
         if(optionalCrewID.isPresent()){
             System.out.println("Crew saved with ID -> "+optionalCrewID.get());
+            return Optional.of(optionalCrewID.get());
+        }else{
+            return Optional.empty();
         }
     }
     public void findCrewById(){

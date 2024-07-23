@@ -36,7 +36,7 @@ public class TripRepositoryImp implements TripRepository{
                             resultSet.getInt("idCrew"),
                             resultSet.getString("date"),
                             resultSet.getInt("idStatus"),
-                            resultSet.getInt("idPlane")
+                            resultSet.getString("idPlane")
                     );
                     return Optional.of(trip);
                 }else{
@@ -50,13 +50,14 @@ public class TripRepositoryImp implements TripRepository{
     }
 
     @Override
-    public Optional<Trip> updateTrip(Trip trip) {
-        String query = "UPDATE trip SET idRoute=?,idCrew=?,date=?,idStatus=?,idPlane=? WHERE id=?";
+    public Optional<Trip> updateCrewTrip(Trip trip) {
+        String query = "UPDATE trip SET idCrew=? WHERE id=?";
         try(
             Connection connection = dbConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(query)
         ){
-            preparedStatement.setInt(1, trip.getId());
+            preparedStatement.setInt(1, trip.getIdCrew());
+            preparedStatement.setInt(2, trip.getId());
             int rowsAff = preparedStatement.executeUpdate();
             if(rowsAff<1){
                 return Optional.empty();

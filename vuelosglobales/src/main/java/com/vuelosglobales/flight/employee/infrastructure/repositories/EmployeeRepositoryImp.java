@@ -20,8 +20,10 @@ public class EmployeeRepositoryImp implements EmployeeRepository{
     }
 
     @Override
-    public Employee saveEmployee(Employee employee) {
+    public Optional<Employee> saveEmployee(Employee employee) {
        String query = "INSERT INTO employee(idUser,idAirport,idAirline,idCountry,admissionDate) VALUES(?,?,?,?,?)";
+       Optional<Employee> optionalEmployee;
+       
        try(Connection connection = dbConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(query)){
                 preparedStatement.setString(1, employee.getIdUser());
@@ -29,12 +31,18 @@ public class EmployeeRepositoryImp implements EmployeeRepository{
                 preparedStatement.setInt(3, employee.getIdAirline());
                 preparedStatement.setInt(4, employee.getIdCountry());
                 preparedStatement.setString(5, employee.getAdmissionDate());
-                int rowsAff = preparedStatement.executeUpdate();
-                if(rowsAff>=1){
-                    return employee;
-                }else{
-                    throw new SQLException("Failed to insert");
+                
+                try{
+                    int rowsAff = 0;
+                     rowsAff= preparedStatement.executeUpdate();
+                
+                    if(rowsAff>=1){
+                        return Optional.of(employee);
+                    }
+                }catch(Exception e){
+                    System.out.println("ERROR CON LA EJECUCION DEL STATEMENT");
                 }
+                return Optional.empty();
             }catch(SQLException e){
                 e.printStackTrace();
                 throw new RuntimeException("DB Error"+e.getMessage(),e);

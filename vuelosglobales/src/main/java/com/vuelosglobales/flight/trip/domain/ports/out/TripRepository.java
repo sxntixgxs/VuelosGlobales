@@ -7,7 +7,7 @@ import com.vuelosglobales.flight.trip.domain.models.Trip;
 
 public interface TripRepository {
     Optional<Trip> findTripById(int id);
-    Optional<Trip> updateTrip(Trip trip);
+    Optional<Trip> updateCrewTrip(Trip trip);
     boolean deleteTrip(int id);
     List<List<String>> ShowTrips();
 }

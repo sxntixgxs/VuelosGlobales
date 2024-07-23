@@ -18,7 +18,7 @@ public class EmployeeService implements EmployeeOperations{
     }
 
     @Override
-    public Employee createEmployee(Employee employee) {
+    public Optional<Employee> createEmployee(Employee employee) {
         Optional<User> userOptional = userRepository.findUser(employee.getIdUser());
         if(!userOptional.isPresent()){
             throw new IllegalArgumentException("User does not exists");

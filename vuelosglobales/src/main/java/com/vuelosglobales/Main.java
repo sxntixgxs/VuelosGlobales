@@ -122,8 +122,10 @@ public class Main {
     public static boolean displayMenu(int roleId, PlaneController planeController,TripController tripController) {
         switch (roleId) {
             case 1:
-                int choice = adminMenu();
-                switch (choice) {
+                boolean continueSession = true;
+                while (continueSession) {
+                    int choice = adminMenu();
+                    switch (choice) {
                     case 1:
                         int planeChoice = planeMenu();
                         switch (planeChoice) {
@@ -156,22 +158,26 @@ public class Main {
                         int tripChoice = tripMenu();
                         switch (tripChoice) {
                             case 1:
-                                tripController.assignCrewToTrip(); 
+                                tripController.assignCrewToTrip();
                                 break;
                         
                             default:
+                            System.out.println("Invalid option");
                                 break;
                         }
                     case 10:
                         System.out.println("Exiting the program...");
-                        return false; // Exit the session
+                        continueSession = false;
+                        break; // Exit the session
                     default:
                         System.out.println("Invalid menu option.");
                         break;
                 }
                 break;
+                }
+
+                
             default:
-                System.out.println("Invalid role.");
                 break;
         }
         return true; // Continue the session
