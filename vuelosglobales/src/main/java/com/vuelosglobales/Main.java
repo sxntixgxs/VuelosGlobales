@@ -217,11 +217,12 @@ public class Main {
                     switch (salesChoice) {
                         case 1:
                             /*
-                             * ingresar cl
+                             * ingresar cl ++++ check
                              * trayecto - mostrar y elegir
                              * tarifa - mostrar y elegir
                              */
-                            customerController.addCustomer();
+                            customerController.addCustomer();//creo que necesito que esto me devuelva al menos el idCustomer para poder añadirlo a la tabla flightReservation
+                            
                             break;
                         case 10:
                             System.out.println("Exiting the program...");
