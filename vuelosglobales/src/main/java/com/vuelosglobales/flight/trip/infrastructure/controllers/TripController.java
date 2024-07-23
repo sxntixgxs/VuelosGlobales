@@ -111,4 +111,39 @@ public class TripController {
         //obtener Plane
 
     }
+    public int selectTrip(){
+        /*
+         * metodo para seleccionar viaje
+         * muestra todos los viajes y se devuelve la seleccion
+         */
+        Scanner sc = new Scanner(System.in);
+        int idTripSelected=0;
+        while(true){
+             System.out.println("TRIPS AVALIABLES");
+             List<List<String>> receivedTripList = tripService.showTrips();
+             for(List<String> trip : receivedTripList){
+                 System.out.println("Trip ID: "+trip.get(0));
+                 System.out.println("Depature: "+trip.get(1));
+                 System.out.println("Arrival: "+trip.get(2));
+                 System.out.println("Date: "+trip.get(4));
+                 System.out.println("Status: "+trip.get(5));
+                 System.out.println();
+             }
+             //solicitar al usuario el viaje
+             System.out.println("Select the trip id: ");
+             int tripId = sc.nextInt();
+             List<String> selectedTrip = null;
+             for(List<String> trip : receivedTripList){
+                 int receivedTripId = Integer.valueOf(trip.get(0));
+                 if(receivedTripId == tripId){
+                     selectedTrip = trip;
+                     return tripId;
+                 }
+             }
+             if(selectedTrip == null){
+                 System.out.println("Invalid input, try again");
+                 continue;
+             }
+        }
+    }
 }

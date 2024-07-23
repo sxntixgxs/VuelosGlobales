@@ -14,7 +14,7 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    public void addCustomer() {
+    public Optional<String> addCustomer() {
         Scanner sc = new Scanner(System.in);
         int idType = 0;
         String id = "";
@@ -100,8 +100,10 @@ public class CustomerController {
         Customer customer = new Customer(id, idType, name, surname, age);
         if (customerService.addCustomer(customer).isPresent()) {
             System.out.println("Customer " + customer.getId() + " saved successfully");
+            return Optional.of(customer.getId());
         } else {
             System.out.println("Failed to save customer");
+            return Optional.empty();
         }
     }
 

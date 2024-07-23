@@ -24,6 +24,10 @@ import com.vuelosglobales.flight.employee.infrastructure.repositories.CrewReposi
 import com.vuelosglobales.flight.employee.infrastructure.repositories.EmployeeRepositoryImp;
 import com.vuelosglobales.flight.employee.infrastructure.repositories.EmployeeVerifyRepoImp;
 import com.vuelosglobales.flight.employee.infrastructure.repositories.ShowEmployeeRepositoryImp;
+import com.vuelosglobales.flight.fare.application.service.FareService;
+import com.vuelosglobales.flight.fare.domain.models.Fare;
+import com.vuelosglobales.flight.fare.infrastructure.controllers.FareController;
+import com.vuelosglobales.flight.fare.infrastructure.repositories.FareRepositoryImp;
 import com.vuelosglobales.flight.trip.application.service.TripService;
 import com.vuelosglobales.flight.trip.infrastructure.controllers.TripController;
 import com.vuelosglobales.flight.trip.infrastructure.repositories.TripRepositoryImp;
@@ -86,6 +90,15 @@ public class Main {
         ShowCustomerRepositoryImp showCustomerRepository = new ShowCustomerRepositoryImp(dbConnection);
         CustomerService customerService = new CustomerService(customerRepository, showDocTypesRepository, showCustomerRepository);
         CustomerController customerController = new CustomerController(customerService);
+
+
+        //Fare dependencies
+        FareRepositoryImp fareRepository = new FareRepositoryImp(dbConnection);
+        FareService fareService = new FareService(fareRepository);
+        FareController fareController = new FareController(fareService);
+
+
+
         while (true) {
             System.out.println("For login press x");
             String start = sc.nextLine().toUpperCase();
@@ -97,7 +110,7 @@ public class Main {
                     System.out.println("Login successful. Role ID: " + roleId.get());
                     boolean flag = false;
                     while (!flag) {
-                        boolean continueSession = displayMenu(roleId.get(), planeController,tripController,customerController);
+                        boolean continueSession = displayMenu(roleId.get(), planeController,tripController,customerController,fareController);
                         if(!continueSession) {
                              flag = true; // Exit the inner loop to log in again or exit the program //cambios
                          }else{
@@ -134,7 +147,7 @@ public class Main {
         return userController.login(id, password);
     }
 
-    public static boolean displayMenu(int roleId, PlaneController planeController, TripController tripController, CustomerController customerController) {
+    public static boolean displayMenu(int roleId, PlaneController planeController, TripController tripController, CustomerController customerController,FareController fareController) {
         switch (roleId) {
             case 1:
                 boolean continueSession = true;
@@ -221,8 +234,13 @@ public class Main {
                              * trayecto - mostrar y elegir
                              * tarifa - mostrar y elegir
                              */
-                            customerController.addCustomer();//creo que necesito que esto me devuelva al menos el idCustomer para poder añadirlo a la tabla flightReservation
-                            
+                            Optional<String> idCustomer = customerController.addCustomer();// deuelve el idCustomer que se va a añadir al trayecto!
+                            int idTrip = tripController.selectTrip();
+                            int idFare = fareController.selectFare(); //devuelve el idFare que selecciono el cl
+                            System.out.println("elections: "+idTrip+ " "+idFare+" "+idCustomer.get());
+                            /*
+                             * CREAR UNA RESERVACION CON
+                             */
                             break;
                         case 10:
                             System.out.println("Exiting the program...");

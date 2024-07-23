@@ -120,7 +120,14 @@ INSERT INTO crew (idPilot, idCopilot, idCrewLeader, idCrewAssistant, idCrewAssis
 ('Z123Y', 'Y432Z', 'Z321Y', 'A321X', 'X123Y'), -- Crew 1
 ('X321Y', 'Z321Y', 'Y432Z', 'A123X', 'Y1234Z'), -- Crew 2
 ('A123X', 'A321X', 'X123Y', 'Z123Y', 'Y432Z'); -- Crew 3
-
+-- Tipos de documento
 INSERT INTO typeDocument (typeDoc) VALUES ('Passport');
 INSERT INTO typeDocument (typeDoc) VALUES ('Foreign ID');
 INSERT INTO typeDocument (typeDoc) VALUES ('National ID');
+
+
+-- TARIFAS DE VUELO
+INSERT INTO flightFare(name,details,amount) VALUES
+("Economy","No luggage",300),
+("Plus","Hand luggage",800),
+("Business","Hold and hand luggage",1200);
