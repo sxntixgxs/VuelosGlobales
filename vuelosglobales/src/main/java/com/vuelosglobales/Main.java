@@ -26,7 +26,9 @@ import com.vuelosglobales.flight.reservation.application.services.ReservationSer
 import com.vuelosglobales.flight.reservation.domain.models.Reservation;
 import com.vuelosglobales.flight.reservation.infrastructure.controllers.ReservationController;
 import com.vuelosglobales.flight.reservation.infrastructure.repositories.ReservationRepositoryImp;
+import com.vuelosglobales.flight.trip.application.service.DateValidatorService;
 import com.vuelosglobales.flight.trip.application.service.TripService;
+import com.vuelosglobales.flight.trip.domain.ports.in.DateValidator;
 import com.vuelosglobales.flight.trip.infrastructure.controllers.TripController;
 import com.vuelosglobales.flight.trip.infrastructure.repositories.TripRepositoryImp;
 import com.vuelosglobales.plane.application.services.DateValidatorImp;
@@ -112,6 +114,8 @@ public class Main {
         EmployeeVerificationServiceImp employeeVerificationServiceImp = new EmployeeVerificationServiceImp(verificationRepository);
         ShowEmployeeRepositoryImp showEmployeeRepository = new ShowEmployeeRepositoryImp(verificationRepository, new SearchUserImpl(new UserRepositoryImp(dbConnection)));
         ShowEmployeeService showEmployeeService = new ShowEmployeeService(showEmployeeRepository);
+        DateValidatorService dateValidator = new DateValidatorService();
+
 
         CrewRepositoryImp crewRepository = new CrewRepositoryImp(dbConnection);
         CrewService crewService = new CrewService(showEmployeeService, employeeRepository, crewRepository);
@@ -119,7 +123,7 @@ public class Main {
         TripService tripService = new TripService(tripRepository);
         VerificationController verificationController = new VerificationController(employeeVerificationServiceImp);
         CrewController crewController = new CrewController(crewService, employeeRepository, verificationController, showEmployeeService, new SearchUserImpl(new UserRepositoryImp(dbConnection)));
-        return new TripController(crewService, tripService, new ShowEnteredDataService(new ShowDataRepoImp(new SpecificRepositoryImp(dbConnection))), new PlaneServiceImp(new PlaneRepositoryImp(dbConnection)), crewController);
+        return new TripController(crewService, tripService, new ShowEnteredDataService(new ShowDataRepoImp(new SpecificRepositoryImp(dbConnection))), new PlaneServiceImp(new PlaneRepositoryImp(dbConnection)), crewController,dateValidator);
     }
 
     private static CustomerController initCustomerController(DBConnection dbConnection) {
@@ -260,6 +264,10 @@ public class Main {
                     break;
                 case 3:
                     tripController.assignPlaneToTrip();
+                    break;
+                case 4:
+                    tripController.updateTrip();
+                    break;
                 case 10:
                     System.out.println("Exiting ...");
                     break;
@@ -291,6 +299,7 @@ public class Main {
         System.out.println("1. Assign crew to trip");
         System.out.println("2. Check trip information");
         System.out.println("3. Assign airplane to trip");
+        System.out.println("4. Update trip information");
         System.out.println("10. Exit");
         return getInputChoice(1, 10);
     }

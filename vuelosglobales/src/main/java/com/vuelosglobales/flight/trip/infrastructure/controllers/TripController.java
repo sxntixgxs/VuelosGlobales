@@ -1,5 +1,6 @@
 package com.vuelosglobales.flight.trip.infrastructure.controllers;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -8,7 +9,9 @@ import java.util.Scanner;
 
 import com.vuelosglobales.flight.employee.application.services.CrewService;
 import com.vuelosglobales.flight.employee.application.services.EmployeeService;
+import com.vuelosglobales.flight.employee.domain.ports.in.DateValidator;
 import com.vuelosglobales.flight.employee.infrastructure.controllers.CrewController;
+import com.vuelosglobales.flight.trip.application.service.DateValidatorService;
 import com.vuelosglobales.flight.trip.application.service.TripService;
 import com.vuelosglobales.flight.trip.domain.models.Trip;
 import com.vuelosglobales.plane.application.services.PlaneServiceImp;
@@ -20,12 +23,14 @@ public class TripController {
     private final ShowEnteredDataService showEnteredDataService;
     private final PlaneServiceImp planeService;
     private final CrewController crewController;
-    public TripController(CrewService crewService, TripService tripService,ShowEnteredDataService showEnteredDataService,PlaneServiceImp planeServiceImp,CrewController crewController) {
+    private final DateValidatorService dateValidator;
+    public TripController(CrewService crewService, TripService tripService,ShowEnteredDataService showEnteredDataService,PlaneServiceImp planeServiceImp,CrewController crewController,DateValidatorService dateValidator) {
         this.crewService = crewService;
         this.tripService = tripService;
         this.showEnteredDataService = showEnteredDataService;
         this.planeService = planeServiceImp;
         this.crewController = crewController;
+        this.dateValidator = dateValidator;
     }
     public void assignCrewToTrip(){
         Scanner sc = new Scanner(System.in);
@@ -201,5 +206,104 @@ public class TripController {
 
         }
 
+    }
+    public void updateTrip(){
+        Scanner sc = new Scanner(System.in);
+        while(true){
+            System.out.println("Enter the trip id: ");
+            try{
+                int tripId = sc.nextInt();
+                if(tripService.findTripById(tripId).isPresent()){
+                    tripService.showTrips().get(tripId-1);
+                    createTripWithoutCrew(tripId);
+                    break;
+                }else{
+                    System.out.println("Invalid input, try again");
+                    sc.nextLine();
+                    continue;
+                }
+            }catch(InputMismatchException e){
+                System.out.println("Invalid input, try again");
+                sc.nextLine();
+                continue;
+            }
+        }
+    }
+    public void createTripWithoutCrew(int tripId){
+        Scanner sc = new Scanner(System.in);
+        int idRoute = 0;
+        String date = "";
+        int idStatus = 0;
+        String idPlane = "";
+        while(true){
+            sc.nextLine();
+            tripService.showRouteWithId();
+            System.out.println("Enter the id of the route: ");
+            try{
+                idRoute = sc.nextInt();
+                if(!tripService.findRouteById(idRoute).isPresent()){
+                    System.out.println("Invalid input, try again");
+                    sc.nextLine();
+                    continue;
+                }else{
+                    sc.nextLine();
+                    break;
+                }
+            }catch(InputMismatchException e){
+                System.out.println("Invalid input, try again");
+                sc.nextLine();
+                continue;
+            }
+         }
+         while(true){
+            System.out.println("Enter the trip date: FORMAT YYYY-MM-DD");
+            date = sc.nextLine();
+            boolean check = dateValidator.isValid(date);
+            if (check) {
+                sc.nextLine();
+                break;
+            } else {
+                System.out.println("Use the correct DATE FORMAT ");
+                continue;
+            }
+        }
+        while(true){
+            tripService.showStatusWithId();
+            System.out.println("Enter the status ID: ");
+            try {
+                idStatus = sc.nextInt();
+                if(idStatus<1 || idStatus>10){
+                    System.out.println("Invalid input, try again");
+                    sc.nextLine();
+                    continue;
+                }else{
+                    sc.nextLine();
+                    break;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input, try again! ");
+            } 
+        }
+        while(true){
+            planeService.getAllPlanes();
+            System.out.println("Enter the plane ID: ");
+            try{
+                idPlane = sc.nextLine();
+                if(!planeService.findPlaneById(idPlane).isPresent()){
+                    System.out.println("Invalid input, try again! ");
+                    sc.nextLine();
+                    continue;
+                }else{
+                    sc.nextLine();
+                    break;
+                }
+            }catch (InputMismatchException e) {
+                System.out.println("Invalid input, try again! ");
+            } 
+        }
+        Trip trip = new Trip(tripId, idRoute, date, idStatus, idPlane);
+        if(tripService.updateTrip(trip).isPresent()){
+            System.out.println("TRIP "+tripId+" updated successfuly");
+        }
     }
 }

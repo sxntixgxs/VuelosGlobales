@@ -11,4 +11,10 @@ public interface TripRepository {
     boolean deleteTrip(int id);
     List<List<String>> ShowTrips();
     Optional<Trip> updateTrip(Trip trip);
+    List<String> getAllCitiesWithId();
+    List<String> getAllRoutesWithId();
+    List<String> getAllStatusWithId();
+    Optional<String> findCityById(int id);
+    Optional<String> findRouteById(int id);
+    Optional<String> findStatusById(int id);
 }

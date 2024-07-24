@@ -7,6 +7,14 @@ public class Trip {
     private String date;
     private int idStatus;
     private String idAirplane;
+    
+    public Trip(int id, int idRoute, String date, int idStatus, String idAirplane) {
+        this.id = id;
+        this.idRoute = idRoute;
+        this.date = date;
+        this.idStatus = idStatus;
+        this.idAirplane = idAirplane;
+    }
     public Trip(int id, int idRoute, int idCrew, String date, int idStatus,String idAirplane) {
         this.id = id;
         this.idRoute = idRoute;
