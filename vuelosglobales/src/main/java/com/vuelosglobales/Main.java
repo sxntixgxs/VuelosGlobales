@@ -329,6 +329,7 @@ public class Main {
         switch (scaleChoice) {
             case 1:
                 scaleController.checkScalesOfTrip();
+                sc.nextLine();
                 break;
             case 2:
                 scaleController.scaleUpdate();

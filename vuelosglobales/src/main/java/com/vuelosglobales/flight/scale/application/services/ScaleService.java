@@ -28,14 +28,11 @@ public class ScaleService implements ScaleOperations{
 
     @Override
     public void showScales(List<List<String>> scaleListWrapper) {
-        if(scaleListWrapper.size()>=1){
-            for (List<String> scaleData : scaleListWrapper) {
-                scaleData.forEach(System.out::println);
-                System.out.println(" ");
-            }
-        }else{
-            System.out.println("Not found ...");
+        for (List<String> scaleData : scaleListWrapper) {
+            scaleData.forEach(System.out::println);
+            System.out.println(" ");
         }
+        
     }
 
     @Override

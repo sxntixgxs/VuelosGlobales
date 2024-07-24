@@ -18,6 +18,8 @@ public class ScaleController {
     }
     public void checkScalesOfTrip(){
         while(true){
+            System.out.println("Press any key ");
+            sc.nextLine();
             System.out.println("Enter the trip id: ");
             try{
                 int tripId = sc.nextInt();
