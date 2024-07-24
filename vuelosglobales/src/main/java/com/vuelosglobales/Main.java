@@ -201,6 +201,16 @@ public class Main {
                 case 2:
                     customerController.checkCustomer();
                     break;
+                case 3:
+                    reservationController.checkReservation();
+                    break;
+                case 4:
+                    customerController.addCustomer();
+                    break;
+                case 5:
+                    customerController.updateCustomer();
+                case 6:
+                    reservationController.deleteReservation();
                 default:
                     System.out.println("Invalid menu option.");
                     break;
@@ -268,6 +278,10 @@ public class Main {
     public static int salesMenu() {
         System.out.println("1. Create flight reservation");
         System.out.println("2. Check customer information");
+        System.out.println("3. Check reservation information");
+        System.out.println("4. Customer register");
+        System.out.println("5. Update customer information");
+        System.out.println("6. Delete flight reservation");
         System.out.println("10. Exit");
         return getInputChoice(1, 10);
     }

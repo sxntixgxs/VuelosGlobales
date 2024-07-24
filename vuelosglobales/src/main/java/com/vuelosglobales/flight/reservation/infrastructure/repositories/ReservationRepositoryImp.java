@@ -43,36 +43,29 @@ public class ReservationRepositoryImp implements ReservationRepository{
     }
 
     @Override
-    public List<Reservation> findReservationByCustomerId(String idCustomer) {
-        String query = "SELECT id,idCustomer,idTrip,idFlightFare FROM flightReservation WHERE idCustomer = ?";
-        List<Reservation> reservationList = new ArrayList<>();
+    public List<List<String>> findReservationByCustomerId(String idCustomer) {
+        String query = "SELECT R.id,R.idCustomer,T.date,FF.name\n" + //
+                        "FROM flightReservation R\n" + //
+                        "INNER JOIN trip T ON R.idTrip = T.id\n" + //
+                        "INNER JOIN flightFare FF ON R.idFlightFare = FF.id\n" + //
+                        "WHERE idCustomer = ?;";
+        List<List<String>> reservationList = new ArrayList<>();
         try(
             Connection connection = dbConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(query)
         ){
+            System.out.println(idCustomer);
             preparedStatement.setString(1, idCustomer);
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
-                Reservation reservation = new Reservation(
-                    resultSet.getInt("id"),
-                    resultSet.getString("idCustomer"),
-                    resultSet.getInt("idTrip"),
-                    resultSet.getInt("idFlightFare")
-                );
-                reservationList.add(reservation);
+                List<String> reservationInfo = new ArrayList<>();
+                reservationInfo.add("Reservation ID: "+resultSet.getInt("R.id"));
+                reservationInfo.add("Customer ID: "+resultSet.getString("R.idCustomer"));
+                reservationInfo.add("Date :"+resultSet.getString("T.date"));
+                reservationInfo.add("Flight fare: "+resultSet.getString("FF.name"));
+                reservationList.add(reservationInfo);
             }
             return reservationList;
-            // if(resultSet.next()){
-            //     Reservation reservation = new Reservation(
-            //         resultSet.getInt("id"),
-            //         resultSet.getString("idCustomer"),
-            //         resultSet.getInt("idTrip"),
-            //         resultSet.getInt("idFlightFare")
-            //     );
-            //     return Optional.of(reservation);
-            // }else{
-            //     return Optional.empty();
-            // }
         }catch(SQLException e){
             e.printStackTrace();
             throw new RuntimeException("Failed to recovery reservation with customer id "+e.getMessage(),e);
@@ -80,36 +73,28 @@ public class ReservationRepositoryImp implements ReservationRepository{
     }
 
     @Override
-    public List<Reservation> findReservationByTripId(String idTrip) {
-        String query = "SELECT id,idCustomer,idTrip,idFlightFare FROM flightReservation WHERE idTrip = ?";
-        List<Reservation> reservationList = new ArrayList<>();
+    public List<List<String>> findReservationByTripId(int idTrip) {
+        String query = "SELECT R.id,R.idCustomer,T.date,FF.name\n" + //
+                        "FROM flightReservation R\n" + //
+                        "INNER JOIN trip T ON R.idTrip = T.id\n" + //
+                        "INNER JOIN flightFare FF ON R.idFlightFare = FF.id\n" + //
+                        "WHERE idTrip = ?;";
+        List<List<String>> reservationList = new ArrayList<>();
         try(
             Connection connection = dbConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(query)
         ){
-            preparedStatement.setString(1, idTrip);
+            preparedStatement.setInt(1, idTrip);
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
-                Reservation reservation = new Reservation(
-                    resultSet.getInt("id"),
-                    resultSet.getString("idCustomer"),
-                    resultSet.getInt("idTrip"),
-                    resultSet.getInt("idFlightFare")
-                );
-                reservationList.add(reservation);
+                List<String> reservationInfo = new ArrayList<>();
+                reservationInfo.add("Reservation ID: "+resultSet.getInt("R.id"));
+                reservationInfo.add("Customer ID: "+resultSet.getString("R.idCustomer"));
+                reservationInfo.add("Date :"+resultSet.getString("T.date"));
+                reservationInfo.add("Flight fare: "+resultSet.getString("FF.name"));
+                reservationList.add(reservationInfo);
             }
             return reservationList;
-            // if(resultSet.next()){
-            //     Reservation reservation = new Reservation(
-            //         resultSet.getInt("id"),
-            //         resultSet.getString("idCustomer"),
-            //         resultSet.getInt("idTrip"),
-            //         resultSet.getInt("idFlightFare")
-            //     );
-            //     return Optional.of(reservation);
-            // }else{
-            //     return Optional.empty();
-            // }
         }catch(SQLException e){
             e.printStackTrace();
             throw new RuntimeException("Failed to recovery reservation with trip id "+e.getMessage(),e);

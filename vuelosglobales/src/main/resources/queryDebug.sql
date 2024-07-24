@@ -5,3 +5,10 @@ INNER JOIN status S ON T.idStatus = S.id
 INNER JOIN city C1 ON R.idDepature = C1.id 
 INNER JOIN city C2 ON R.idArrival = C2.id;
 describe route;
+
+
+SELECT R.id,R.idCustomer,T.date,FF.name
+FROM flightReservation R
+INNER JOIN trip T ON R.idTrip = T.id
+INNER JOIN flightFare FF ON R.idFlightFare = FF.id
+WHERE idTrip = 1;

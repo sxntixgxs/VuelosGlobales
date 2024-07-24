@@ -21,12 +21,12 @@ public class ReservationService implements ReservationOperations{
     }
 
     @Override
-    public List<Reservation> findReservationByCustomerId(String idCustomer) {
+    public List<List<String>> findReservationByCustomerId(String idCustomer) {
         return reservationRepositoryImp.findReservationByCustomerId(idCustomer);
     }
 
     @Override
-    public List<Reservation> findReservationByTripId(String idTrip) {
+    public List<List<String>> findReservationByTripId(int idTrip) {
         return reservationRepositoryImp.findReservationByTripId(idTrip);
     }
 

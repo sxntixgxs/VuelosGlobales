@@ -29,7 +29,6 @@ public class CustomerController {
         // Obtener el tipo de documento
         while (true) {
             System.out.println("Select an id type: ");
-            System.out.println(customerService.showDocTypes());
             customerService.showDocTypes().forEach(System.out::println);
             System.out.println("Enter customer id type: ");
             try {
@@ -127,7 +126,7 @@ public class CustomerController {
         String surname = customer.getSurname();
         int age = customer.getAge();
 
-        System.out.println("Updating customer: " + customer);
+        System.out.println("Updating customer: " + customer.getId());
 
         // Obtener el tipo de documento
         while (true) {
