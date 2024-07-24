@@ -131,3 +131,30 @@ INSERT INTO flightFare(name,details,amount) VALUES
 ("Economy","No luggage",300),
 ("Plus","Hand luggage",800),
 ("Business","Hold and hand luggage",1200);
+
+-- Insertar datos en flightScales
+-- Insertar nuevas ciudades
+INSERT INTO city (name, idCountry) VALUES
+('Mexico City', 1),  
+('San Francisco', 2), 
+('Vancouver', 3);        
+
+-- Insertar más viajes en la tabla trip
+INSERT INTO trip (idRoute, idCrew, date, idStatus, idPlane) VALUES
+(4, NULL, '2024-08-01', 2, 'PL003'),  -- Nuevo viaje (ID 4)
+(5, NULL, '2024-08-02', 1, 'PL004');  -- Nuevo viaje (ID 5)
+
+-- Insertar datos en flightScales para los nuevos viajes
+-- Insertar datos en flightScales para los nuevos viajes
+INSERT INTO flightScales (idScaleCity, idTrip, date) VALUES
+-- Viaje 4: (Bogotá a San Francisco con escala en Mexico City)
+(5, 4, '2024-08-01'),  -- Mexico City para el viaje 4
+(1, 4, '2024-08-01'),  -- Bogotá para el viaje 4
+(6, 4, '2024-08-01'),  -- San Francisco para el viaje 4
+
+-- Viaje 5: (New York a Vancouver con escalas en Chicago y Toronto)
+(7, 5, '2024-08-02'),  -- Vancouver para el viaje 5
+(3, 5, '2024-08-02'),  -- Toronto para el viaje 5
+(2, 5, '2024-08-02');  -- New York para el viaje 5
+
+

@@ -26,6 +26,11 @@ import com.vuelosglobales.flight.reservation.application.services.ReservationSer
 import com.vuelosglobales.flight.reservation.domain.models.Reservation;
 import com.vuelosglobales.flight.reservation.infrastructure.controllers.ReservationController;
 import com.vuelosglobales.flight.reservation.infrastructure.repositories.ReservationRepositoryImp;
+import com.vuelosglobales.flight.scale.application.services.ScaleService;
+import com.vuelosglobales.flight.scale.domain.models.Scale;
+import com.vuelosglobales.flight.scale.domain.ports.out.ScaleRepository;
+import com.vuelosglobales.flight.scale.infrastructure.controllers.ScaleController;
+import com.vuelosglobales.flight.scale.infrastructure.repositories.ScaleRepositoryImp;
 import com.vuelosglobales.flight.trip.application.service.DateValidatorService;
 import com.vuelosglobales.flight.trip.application.service.TripService;
 import com.vuelosglobales.flight.trip.domain.ports.in.DateValidator;
@@ -60,6 +65,7 @@ public class Main {
         CustomerController customerController = initCustomerController(dbConnection);
         FareController fareController = initFareController(dbConnection);
         ReservationController reservationController = initReservationController(dbConnection);
+        ScaleController scaleController = initScaleController(dbConnection);
 
         boolean running = true;
         while (running) {
@@ -68,7 +74,7 @@ public class Main {
                 System.out.println("Login successful. Role ID: " + roleId.get());
                 boolean continueSession = true;
                 while (continueSession) {
-                    continueSession = displayMenu(roleId.get(), planeController, tripController, customerController, fareController, reservationController);
+                    continueSession = displayMenu(roleId.get(), planeController, tripController, customerController, fareController, reservationController,scaleController);
                 }
             } else {
                 System.out.println("Login failed.");
@@ -89,7 +95,11 @@ public class Main {
 
         sc.close();
     }
-
+    private static ScaleController initScaleController(DBConnection dbConnection){
+        ScaleRepositoryImp scaleRepositoryImp = new ScaleRepositoryImp(dbConnection);
+        ScaleService scaleService = new ScaleService(scaleRepositoryImp);
+        return new ScaleController(scaleService);
+    }
     private static UserController initUserController(DBConnection dbConnection) {
         UserRepositoryImp userRepositoryImp = new UserRepositoryImp(dbConnection);
         AuthService authService = new AuthServiceImpl(userRepositoryImp);
@@ -155,19 +165,19 @@ public class Main {
         return userController.login(id, password);
     }
 
-    public static boolean displayMenu(int roleId, PlaneController planeController, TripController tripController, CustomerController customerController, FareController fareController, ReservationController reservationController) {
+    public static boolean displayMenu(int roleId, PlaneController planeController, TripController tripController, CustomerController customerController, FareController fareController, ReservationController reservationController,ScaleController scaleController) {
         switch (roleId) {
             case 1:
-                return handleAdminMenu(planeController, tripController);
+                return handleAdminMenu(planeController, tripController,fareController,scaleController);
             case 4:
-                return handleSalesMenu(customerController, tripController, fareController, reservationController);
+                return handleSalesMenu(customerController, tripController, fareController, reservationController,scaleController);
             default:
                 System.out.println("Invalid role ID.");
                 return false;
         }
     }
 
-    public static boolean handleAdminMenu(PlaneController planeController, TripController tripController) {
+    public static boolean handleAdminMenu(PlaneController planeController, TripController tripController,FareController fareController,ScaleController scaleController) {
         while (true) {
             int choice = adminMenu();
             if (choice == 10) {
@@ -180,6 +190,14 @@ public class Main {
                 case 2:
                     handleTripMenu(tripController);
                     break;
+                case 3:
+                    handleFareMenu(fareController);
+                case 4:
+                    handleScaleMenu(scaleController);
+                    break;
+                case 10:
+                    System.out.println("Exiting ...");
+                    break;
                 default:
                     System.out.println("Invalid option.");
                     break;
@@ -187,7 +205,7 @@ public class Main {
         }
     }
 
-    public static boolean handleSalesMenu(CustomerController customerController, TripController tripController, FareController fareController, ReservationController reservationController) {
+    public static boolean handleSalesMenu(CustomerController customerController, TripController tripController, FareController fareController, ReservationController reservationController,ScaleController scaleController) {
         while (true) {
             int salesChoice = salesMenu();
             if (salesChoice == 10) {
@@ -215,6 +233,8 @@ public class Main {
                     customerController.updateCustomer();
                 case 6:
                     reservationController.deleteReservation();
+                case 7:
+                    handleScaleMenu(scaleController);
                 default:
                     System.out.println("Invalid menu option.");
                     break;
@@ -280,10 +300,55 @@ public class Main {
             }break;
         }
     }
-
+    public static void handleFareMenu(FareController fareController){
+        while (true){
+            int fareChoide = fareMenu();
+            switch (fareChoide) {
+                case 1:
+                    fareController.addFare();
+                    break;
+                case 2:
+                    fareController.updateFare();
+                    break;
+                case 3:
+                    fareController.deleteFare();
+                    break;
+                case 4:
+                    fareController.showFareById();
+                    break;
+                case 10:
+                    break;
+                default:
+                    break;
+            }break;
+        }
+    }
+    public static void handleScaleMenu(ScaleController scaleController) {
+    while (true) {
+        int scaleChoice = scaleMenu();
+        switch (scaleChoice) {
+            case 1:
+                scaleController.checkScalesOfTrip();
+                break;
+            case 2:
+                scaleController.scaleUpdate();
+                break;
+            case 3:
+                scaleController.scaleDelete();
+                break;
+            case 10:
+                return;
+            default:
+                System.out.println("Invalid choice, please try again.");
+                break;
+        }
+    }
+}
     public static int adminMenu() {
         System.out.println("1. Plane actions");
         System.out.println("2. Trip actions");
+        System.out.println("3. Fare actions");
+        System.out.println("4. Scale actions");
         System.out.println("10. Exit");
         return getInputChoice(1, 10);
     }
@@ -307,7 +372,21 @@ public class Main {
         System.out.println("10. Exit");
         return getInputChoice(1, 10);
     }
-
+    public static int fareMenu(){
+        System.out.println("1. Register flight fare");
+        System.out.println("2. Update flight fare");
+        System.out.println("3. Delete flight fare");
+        System.out.println("4. Check flight fare");
+        System.out.println("10. Exit");
+        return getInputChoice(1, 10);
+    }
+    public static int scaleMenu(){
+        System.out.println("1. Check the trip scales");
+        System.out.println("2. Update scales information");
+        System.out.println("3. Delete scale");
+        System.out.println("10. Exit");
+        return getInputChoice(1, 10);
+    }
     public static int salesMenu() {
         System.out.println("1. Create flight reservation");
         System.out.println("2. Check customer information");
@@ -315,6 +394,7 @@ public class Main {
         System.out.println("4. Customer register");
         System.out.println("5. Update customer information");
         System.out.println("6. Delete flight reservation");
+        System.out.println("7. Scale operations [menu]");
         System.out.println("10. Exit");
         return getInputChoice(1, 10);
     }

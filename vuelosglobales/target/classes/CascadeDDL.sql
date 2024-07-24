@@ -163,3 +163,38 @@ CREATE TABLE flightReservation(
     FOREIGN KEY (idFlightFare) REFERENCES flightFare(id) ON DELETE CASCADE
 );
 -- el pago lo manejaría aparte, es decir flightCheckPaymentReservation!
+
+
+DELIMITER //
+
+CREATE PROCEDURE updateScaleCity(IN idScale INT, IN idTrip INT)
+BEGIN
+    DECLARE depCityId INT;
+
+    
+    SELECT R.idDepature INTO depCityId
+    FROM trip T
+    INNER JOIN route R ON T.idRoute = R.id
+    WHERE T.id = idTrip;
+
+    
+    UPDATE flightScales
+    SET idScaleCity = depCityId
+    WHERE id = idScale;
+
+END //
+
+DELIMITER //
+
+CREATE PROCEDURE rowsScaleTable(OUT rowsScale INT)
+BEGIN
+    SELECT COUNT(id) INTO rowsScale
+    FROM flightScales;
+END //
+
+DELIMITER ;
+
+/*
+CALL rowsScaleTable(@totalRows);
+SELECT @totalRows;
+*/
