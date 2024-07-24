@@ -108,19 +108,43 @@ public class TripRepositoryImp implements TripRepository{
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()){
                 List<String> tripSingular = new ArrayList<>();
-                tripSingular.add(Integer.toString(resultSet.getInt("T.id")));//idx 0
-                tripSingular.add(resultSet.getString("CityDepature"));//idx 1
-                tripSingular.add(resultSet.getString("CityArrival"));//idx 2
-                tripSingular.add(Integer.toString(resultSet.getInt("T.idCrew")));//idx 3
-                tripSingular.add(resultSet.getString("T.date"));//idx 4
-                tripSingular.add(resultSet.getString("S.name"));//idx 5
-                tripSingular.add(resultSet.getString("T.idPlane"));//idx6
+                tripSingular.add("Trip ID -> "+Integer.toString(resultSet.getInt("T.id")));//idx 0
+                tripSingular.add("Depature -> "+resultSet.getString("CityDepature"));//idx 1
+                tripSingular.add("Arrival -> "+resultSet.getString("CityArrival"));//idx 2
+                tripSingular.add("Crew -> "+Integer.toString(resultSet.getInt("T.idCrew")));//idx 3
+                tripSingular.add("Date -> "+resultSet.getString("T.date"));//idx 4
+                tripSingular.add("Status ->"+resultSet.getString("S.name"));//idx 5
+                tripSingular.add("Plane ID -> "+resultSet.getString("T.idPlane"));//idx6
                 tripList.add(tripSingular);
             }
             return tripList;
         }catch(SQLException e){
             e.printStackTrace();
             throw new RuntimeException("DB ERROR "+e.getMessage(),e);
+        }
+    }
+
+    @Override
+    public Optional<Trip> updateTrip(Trip trip) {
+        String query = "UPDATE trip SET idRoute=?,date=?,idStatus=?,idPlane=? WHERE id = ?";
+        try(
+            Connection connection = dbConnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query)
+        ){
+            preparedStatement.setInt(1, trip.getIdRoute());
+            preparedStatement.setString(2, trip.getDate());
+            preparedStatement.setInt(3, trip.getIdStatus());
+            preparedStatement.setString(4, trip.getIdAirplane());
+            preparedStatement.setInt(5,trip.getId());
+            int rowsAff = preparedStatement.executeUpdate();
+            if(rowsAff==1){
+                return Optional.of(trip);
+            }else{
+                return Optional.empty();
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException("Failed trying to update trip "+e.getMessage(),e);
         }
     }
     

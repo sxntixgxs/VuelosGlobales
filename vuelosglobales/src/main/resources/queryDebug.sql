@@ -12,3 +12,10 @@ FROM flightReservation R
 INNER JOIN trip T ON R.idTrip = T.id
 INNER JOIN flightFare FF ON R.idFlightFare = FF.id
 WHERE idTrip = 1;
+
+SELECT P.id,P.capacity,P.fabrication,S.name,A.name,M.name
+FROM plane P
+INNER JOIN status S ON P.idStatus = S.id
+INNER JOIN airline A ON P.idAirline = A.id
+INNER JOIN model M ON P.idModel = M.id
+;

@@ -33,5 +33,10 @@ public class TripService implements TripOperations {
     public List<List<String>> showTrips() {
         return tripRepository.ShowTrips();
     }
+
+    @Override
+    public Optional<Trip> updateTrip(Trip trip) {
+        return tripRepository.updateTrip(trip);
+    }
     
 }

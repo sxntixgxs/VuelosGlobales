@@ -146,4 +146,60 @@ public class TripController {
              }
         }
     }
+    public void checkTrip(){
+        Scanner sc = new Scanner(System.in);
+            System.out.println("Enter the trip id: ");
+            int tripId = sc.nextInt();
+            if(tripService.findTripById(tripId).isPresent()){
+                tripService.showTrips().get(tripId-1).forEach(System.out::println);
+                sc.nextLine();
+            }else{
+                System.out.println("Trip not found");
+                sc.nextLine();
+            }
+        
+    }
+    public void assignPlaneToTrip(){
+        Scanner sc = new Scanner(System.in);
+        while(true){
+            System.out.println("These are the available trips");
+            List<List<String>> tripListWrap = tripService.showTrips();
+            for (List<String> tripList : tripListWrap) {
+                System.out.println(" ");
+                tripList.forEach(System.out::println);
+            }
+            try{
+                System.out.println("Enter the trip id: ");
+                int tripIdSelected = sc.nextInt();
+                sc.nextLine();
+                if(tripService.findTripById(tripIdSelected).isPresent()){
+                    Trip updatedTrip = tripService.findTripById(tripIdSelected).get();
+                    planeService.getAllPlanes();
+                    String idNewPlane = sc.nextLine();
+                    if(planeService.findPlaneById(idNewPlane).isPresent()){
+                        updatedTrip.setIdAirplane(idNewPlane);
+                        tripService.updateTrip(updatedTrip);
+                        System.out.println();
+                        System.out.println("Plane "+idNewPlane+" assigned to the flight "+tripIdSelected);
+                        sc.nextLine();
+                        break;
+                    }else{
+                        System.out.println("Invalid input, try again");
+                        sc.nextLine();
+                        continue;
+                    }
+                }else{
+                    System.out.println("Invalid input, try again");
+                    sc.nextLine();
+                    continue;
+                }
+            }catch(InputMismatchException e){
+                System.out.println("Invalid input, try again");
+                sc.nextLine();
+                continue;
+            }
+
+        }
+
+    }
 }

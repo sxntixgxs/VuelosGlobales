@@ -10,5 +10,5 @@ public interface TripOperations {
     Optional<Trip> updateCrewTrip(Trip trip);
     boolean deleteTrip(int id);
     List<List<String>> showTrips();
-    
+    Optional<Trip> updateTrip(Trip trip);
 }

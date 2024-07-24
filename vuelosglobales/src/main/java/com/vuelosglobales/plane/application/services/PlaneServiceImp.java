@@ -1,5 +1,6 @@
 package com.vuelosglobales.plane.application.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.vuelosglobales.plane.domain.models.Plane;
@@ -34,6 +35,15 @@ public class PlaneServiceImp implements PlaneOperations {
             return planeRepository.updatePlane(plane);
         }else{
             throw new IllegalArgumentException("Plane with ID "+plane.getId()+"does not exist.");
+        }
+    }
+
+    @Override
+    public void getAllPlanes() {
+        List<List<String>> wrap = planeRepository.getAllPlanes();
+        for (List<String> plane : wrap) {
+            plane.forEach(System.out::println);
+            System.out.println(" ");
         }
     }
 

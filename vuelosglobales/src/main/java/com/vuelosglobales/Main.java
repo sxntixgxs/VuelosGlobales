@@ -171,7 +171,7 @@ public class Main {
             }
             switch (choice) {
                 case 1:
-                    handlePlaneMenu(planeController);
+                    handlePlaneMenu(planeController,tripController);
                     break;
                 case 2:
                     handleTripMenu(tripController);
@@ -218,7 +218,7 @@ public class Main {
         }
     }
 
-    public static void handlePlaneMenu(PlaneController planeController) {
+    public static void handlePlaneMenu(PlaneController planeController,TripController tripController) {
         while (true) {
             int planeChoice = planeMenu();
             switch (planeChoice) {
@@ -227,6 +227,7 @@ public class Main {
                     break;
                 case 2:
                     planeController.updatePlane();
+                    sc.nextLine();
                     break;
                 case 3:
                     planeController.deletePlaneById();
@@ -234,10 +235,16 @@ public class Main {
                 case 4:
                     planeController.checkPlaneById();
                     break;
+                case 5:
+                    tripController.checkTrip();
+                    break;
+                case 10:
+                    System.out.println("Exiting ...");
+                    break;
                 default:
                     System.out.println("Invalid option.");
                     break;
-            }
+            }break;
         }
     }
 
@@ -248,10 +255,18 @@ public class Main {
                 case 1:
                     tripController.assignCrewToTrip();
                     break;
+                case 2:
+                    tripController.checkTrip();
+                    break;
+                case 3:
+                    tripController.assignPlaneToTrip();
+                case 10:
+                    System.out.println("Exiting ...");
+                    break;
                 default:
                     System.out.println("Invalid option.");
                     break;
-            }
+            }break;
         }
     }
 
@@ -267,12 +282,17 @@ public class Main {
         System.out.println("2. Update plane information");
         System.out.println("3. Delete plane");
         System.out.println("4. Check plane information");
-        return getInputChoice(1, 4);
+        System.out.println("5. Check trip information");
+        System.out.println("10. Exit menu");
+        return getInputChoice(1, 10);
     }
 
     public static int tripMenu() {
         System.out.println("1. Assign crew to trip");
-        return getInputChoice(1, 1);
+        System.out.println("2. Check trip information");
+        System.out.println("3. Assign airplane to trip");
+        System.out.println("10. Exit");
+        return getInputChoice(1, 10);
     }
 
     public static int salesMenu() {

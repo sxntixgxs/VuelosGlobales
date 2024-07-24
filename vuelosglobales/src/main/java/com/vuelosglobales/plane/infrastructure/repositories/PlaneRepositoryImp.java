@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import com.vuelosglobales.plane.domain.models.Plane;
@@ -98,5 +100,33 @@ public class PlaneRepositoryImp implements PlaneRepository{
             throw new RuntimeException("DB error"+e.getMessage(),e);
         }
     }
+
+    @Override
+    public List<List<String>> getAllPlanes() {
+        String query = "SELECT P.id,P.capacity,P.fabrication,S.name,A.name,M.name FROM plane P INNER JOIN status S ON P.idStatus = S.id INNER JOIN airline A ON P.idAirline = A.id INNER JOIN model M ON P.idModel = M.id";
+        List<List<String>> planesWrapperList = new ArrayList<>();
+        try(
+            Connection connection = dbConnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query)
+        ){
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                List<String> planeList = new ArrayList<>();
+                planeList.add("Plane ID: "+resultSet.getString("P.id"));
+                planeList.add("Capacity: "+resultSet.getInt("P.capacity"));
+                planeList.add("Fabrication date: "+resultSet.getString("P.fabrication"));
+                planeList.add("Status: "+resultSet.getString("S.name"));
+                planeList.add("Airline: "+resultSet.getString("A.name"));
+                planeList.add("Model: "+resultSet.getString("M.name"));
+                planesWrapperList.add(planeList);
+            }
+            return planesWrapperList;
+        }catch(SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException("Failed getting planes: "+e.getMessage(),e);
+        }
+    }
+
+
     
 }

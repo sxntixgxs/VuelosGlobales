@@ -10,4 +10,5 @@ public interface TripRepository {
     Optional<Trip> updateCrewTrip(Trip trip);
     boolean deleteTrip(int id);
     List<List<String>> ShowTrips();
+    Optional<Trip> updateTrip(Trip trip);
 }

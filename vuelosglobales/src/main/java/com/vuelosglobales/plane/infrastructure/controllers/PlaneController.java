@@ -1,6 +1,7 @@
 package com.vuelosglobales.plane.infrastructure.controllers;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -295,12 +296,18 @@ public class PlaneController {
                     sc.nextLine();
                     continue;
                 }else{
+                    System.out.println("Press any key to continue ...");
+                    sc.nextLine();
                     showEnteredDataService.showPlaneEntered(plane.get());
+                    sc.nextLine();
                     break;
                 }
             }catch(InputMismatchException e){
                 System.out.println("Invalid input, try again!");
             }
         }
+    }
+    public void showPlanes(){
+        planeServiceImp.getAllPlanes();
     }
 }
