@@ -11,13 +11,13 @@ import com.vuelosglobales.flight.customer.domain.models.Customer;
 
 public class CustomerController {
     private final CustomerService customerService;
+    private final Scanner sc = new Scanner(System.in);
 
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
     public Optional<String> addCustomer() {
-        Scanner sc = new Scanner(System.in);
         int idType = 0;
         String id = "";
         String name = "";
@@ -110,7 +110,6 @@ public class CustomerController {
     }
 
     public void updateCustomer() {
-        Scanner sc = new Scanner(System.in);
 
         // Obtener el ID del cliente a actualizar
         System.out.println("Enter customer ID to update: ");
@@ -200,7 +199,6 @@ public class CustomerController {
         }
     }
     public void checkCustomer(){
-        Scanner sc = new Scanner(System.in);
         String customerId = "";
         while(true){
             System.out.println("Enter the customer id");
@@ -215,6 +213,5 @@ public class CustomerController {
                 continue;
             }
         }
-        sc.close();
     }
 }

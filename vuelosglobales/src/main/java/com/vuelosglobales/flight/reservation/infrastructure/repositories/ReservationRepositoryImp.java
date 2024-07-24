@@ -137,25 +137,22 @@ public class ReservationRepositoryImp implements ReservationRepository{
     }
 
     @Override
-    public Optional<Reservation> getReservationById(int idReservation) {
+    public List<String> getReservationById(int idReservation) {
         String query = "SELECT id,idCustomer,idTrip,idFlightFare FROM flightReservation WHERE id = ?";
+        List<String> reservationData = new ArrayList<>();
         try(
             Connection connection = dbConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(query)
         ){
             preparedStatement.setInt(1, idReservation);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if(resultSet.next()){
-                Reservation reservation = new Reservation(
-                    resultSet.getInt("id"),
-                    resultSet.getString("idCustomer"),
-                    resultSet.getInt("idTrip"),
-                    resultSet.getInt("idFlightFare")
-                );
-                return Optional.of(reservation);
-            }else{
-                return Optional.empty();
+            while(resultSet.next()){
+                reservationData.add("RESERVATION ID: "+resultSet.getInt("id"));
+                reservationData.add("CUSTOMER ID: "+resultSet.getString("idCustomer"));
+                reservationData.add("TRIP ID: "+resultSet.getInt("idTrip"));
+                reservationData.add("FLIGHT FARE ID: "+resultSet.getInt("idFlightFare"));
             }
+            return reservationData;
         }catch(SQLException e){
             e.printStackTrace();
             throw new RuntimeException("Failied to get reservation by id"+e.getMessage(),e);

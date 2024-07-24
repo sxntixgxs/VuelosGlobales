@@ -10,6 +10,6 @@ public interface ReservationRepository {
     List<Reservation> findReservationByCustomerId(String idCustomer);
     List<Reservation> findReservationByTripId(String idTrip);
     boolean deleteReservation(int idReservation);
-    Optional<Reservation> getReservationById(int idReservation);
+    List<String> getReservationById(int idReservation);
     Optional<Reservation> getReservationByComponents(Reservation reservation);
 }

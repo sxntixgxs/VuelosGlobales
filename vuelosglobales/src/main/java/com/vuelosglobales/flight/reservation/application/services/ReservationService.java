@@ -36,7 +36,7 @@ public class ReservationService implements ReservationOperations{
     }
 
     @Override
-    public Optional<Reservation> findReservationById(int idReservation) {
+    public List<String> findReservationById(int idReservation) {
         return reservationRepositoryImp.getReservationById(idReservation);
     }
 
