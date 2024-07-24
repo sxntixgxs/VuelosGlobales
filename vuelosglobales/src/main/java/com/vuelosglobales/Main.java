@@ -268,6 +268,9 @@ public class Main {
                 case 4:
                     tripController.updateTrip();
                     break;
+                case 5:
+                    tripController.deleteTrip();
+                    break;
                 case 10:
                     System.out.println("Exiting ...");
                     break;
@@ -300,6 +303,7 @@ public class Main {
         System.out.println("2. Check trip information");
         System.out.println("3. Assign airplane to trip");
         System.out.println("4. Update trip information");
+        System.out.println("5. Delete trip");
         System.out.println("10. Exit");
         return getInputChoice(1, 10);
     }

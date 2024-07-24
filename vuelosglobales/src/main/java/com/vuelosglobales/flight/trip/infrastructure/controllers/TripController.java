@@ -306,4 +306,28 @@ public class TripController {
             System.out.println("TRIP "+tripId+" updated successfuly");
         }
     }
+    public void deleteTrip(){
+        Scanner sc = new Scanner(System.in);
+        while(true){
+            System.out.println("Enter the trip id: ");
+            try{
+                int id = sc.nextInt();
+                if(tripService.deleteTrip(id)){
+                    System.out.println("Trip deleted successfuly");
+                    sc.nextLine();
+                    break;
+                }else{
+                    System.out.println("Invalid input, try again");
+                    sc.nextLine();
+                    continue;
+                }
+            }catch(InputMismatchException e){
+                System.out.println("Invalid input, try again! ");
+                sc.nextLine();
+                continue;
+            }
+
+        }
+
+    }
 }
