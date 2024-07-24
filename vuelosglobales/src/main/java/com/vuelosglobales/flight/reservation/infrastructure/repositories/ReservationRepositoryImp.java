@@ -161,4 +161,32 @@ public class ReservationRepositoryImp implements ReservationRepository{
             throw new RuntimeException("Failied to get reservation by id"+e.getMessage(),e);
         }
     }
+
+    @Override
+    public Optional<Reservation> getReservationByComponents(Reservation reservation) {
+        String query = "SELECT id,idCustomer,idTrip,idFlightFare FROM flightReservation WHERE idCustomer = ? AND idTrip = ? AND idFlightFare = ?";
+        try(
+            Connection connection = dbConnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(query)
+        ){
+            preparedStatement.setString(1, reservation.getIdCustomer());
+            preparedStatement.setInt(2, reservation.getIdTrip());
+            preparedStatement.setInt(3, reservation.getIdFlightFare());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                Reservation resultReservation = new Reservation(
+                    resultSet.getInt("id"),
+                    resultSet.getString("idCustomer"),
+                    resultSet.getInt("idTrip"),
+                    resultSet.getInt("idFlightFare")
+                );
+                return Optional.of(resultReservation);
+            }else{
+                return Optional.empty();
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+            throw new RuntimeException("Failed to get reservation by components "+e.getMessage(),e);
+        }
+    }
 }

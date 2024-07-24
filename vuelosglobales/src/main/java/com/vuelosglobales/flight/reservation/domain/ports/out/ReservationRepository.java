@@ -11,4 +11,5 @@ public interface ReservationRepository {
     List<Reservation> findReservationByTripId(String idTrip);
     boolean deleteReservation(int idReservation);
     Optional<Reservation> getReservationById(int idReservation);
+    Optional<Reservation> getReservationByComponents(Reservation reservation);
 }

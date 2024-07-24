@@ -28,6 +28,10 @@ import com.vuelosglobales.flight.fare.application.service.FareService;
 import com.vuelosglobales.flight.fare.domain.models.Fare;
 import com.vuelosglobales.flight.fare.infrastructure.controllers.FareController;
 import com.vuelosglobales.flight.fare.infrastructure.repositories.FareRepositoryImp;
+import com.vuelosglobales.flight.reservation.application.services.ReservationService;
+import com.vuelosglobales.flight.reservation.domain.models.Reservation;
+import com.vuelosglobales.flight.reservation.infrastructure.controllers.ReservationController;
+import com.vuelosglobales.flight.reservation.infrastructure.repositories.ReservationRepositoryImp;
 import com.vuelosglobales.flight.trip.application.service.TripService;
 import com.vuelosglobales.flight.trip.infrastructure.controllers.TripController;
 import com.vuelosglobales.flight.trip.infrastructure.repositories.TripRepositoryImp;
@@ -97,7 +101,10 @@ public class Main {
         FareService fareService = new FareService(fareRepository);
         FareController fareController = new FareController(fareService);
 
-
+        //Reservation dependencies
+        ReservationRepositoryImp reservationRepository = new ReservationRepositoryImp(dbConnection);
+        ReservationService reservationService = new ReservationService(reservationRepository);
+        ReservationController reservationController = new ReservationController(reservationService);
 
         while (true) {
             System.out.println("For login press x");
@@ -110,7 +117,7 @@ public class Main {
                     System.out.println("Login successful. Role ID: " + roleId.get());
                     boolean flag = false;
                     while (!flag) {
-                        boolean continueSession = displayMenu(roleId.get(), planeController,tripController,customerController,fareController);
+                        boolean continueSession = displayMenu(roleId.get(), planeController,tripController,customerController,fareController,reservationController);
                         if(!continueSession) {
                              flag = true; // Exit the inner loop to log in again or exit the program //cambios
                          }else{
@@ -147,7 +154,7 @@ public class Main {
         return userController.login(id, password);
     }
 
-    public static boolean displayMenu(int roleId, PlaneController planeController, TripController tripController, CustomerController customerController,FareController fareController) {
+    public static boolean displayMenu(int roleId, PlaneController planeController, TripController tripController, CustomerController customerController,FareController fareController,ReservationController reservationController) {
         switch (roleId) {
             case 1:
                 boolean continueSession = true;
@@ -193,25 +200,6 @@ public class Main {
                                     break;
                             }
                             break;
-                        // case 4: // sales
-                        //     System.out.println("hago algo");
-                        //     int salesChoice = salesMenu();
-                        //     switch (salesChoice) {
-                        //         case 1:
-                        //             /*
-                        //              * ingresar cl
-                        //              * trayecto - mostrar y elegir
-                        //              * tarifa - mostrar y elegir
-                        //              */
-                        //             // ingresar cl
-                        //             //CustomerController.add
-                        //             customerController.addCustomer();
-                        //             break;
-                        //         default:
-                        //             System.out.println("Invalid option.");
-                        //             break;
-                        //     }
-                        //     break; // break added here to prevent falling through to case 10
                         case 10:
                             System.out.println("Exiting the program...");
                             continueSession = false;
@@ -229,18 +217,15 @@ public class Main {
                     int salesChoice = salesMenu();
                     switch (salesChoice) {
                         case 1:
-                            /*
-                             * ingresar cl ++++ check
-                             * trayecto - mostrar y elegir
-                             * tarifa - mostrar y elegir
-                             */
                             Optional<String> idCustomer = customerController.addCustomer();// deuelve el idCustomer que se va a añadir al trayecto!
                             int idTrip = tripController.selectTrip();
                             int idFare = fareController.selectFare(); //devuelve el idFare que selecciono el cl
-                            System.out.println("elections: "+idTrip+ " "+idFare+" "+idCustomer.get());
-                            /*
-                             * CREAR UNA RESERVACION CON
-                             */
+                            Reservation reservation  = new Reservation(idCustomer.get(), idTrip, idFare);
+                            reservationController.makeReservation(reservation);
+                            System.out.println("Reservation successfuly");
+                            break;
+                        case 2://consultar cliente
+                            customerController.checkCustomer();
                             break;
                         case 10:
                             System.out.println("Exiting the program...");
@@ -262,24 +247,37 @@ public class Main {
     
 
     public static int salesMenu(){
+
         int choice;
         while(true){
+
             System.out.println("1. Create flight reservation");
+            System.out.println("2. Check customer information");
+            System.out.println("10. Exit");
             System.out.println("more options ...");
             try {
-                choice = sc.nextInt();
-                if(choice<1 || choice > 4){
-                    System.out.println("Invalid input, try again");
-                    continue;
+                Scanner sc = new Scanner(System.in);
+                if(sc.hasNextInt()){
+                    System.out.println("Enter your choice ");
+                    choice = sc.nextInt();
+                    if(choice<1 || choice > 4){
+                        System.out.println("Invalid input, try again");
+                        continue;
+                    }else{
+                        sc.close();
+                        break;
+                    }
                 }else{
-                    break;
+                    System.out.println("Invalid input 1, try again");
+                    sc.nextLine();
+                    continue;
                 }
-                
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input, try again ");
+            }catch (InputMismatchException e) {
+                System.out.println("Invalid input 2 try again ");
                 continue;
             }
         }
+        sc.close();
         return choice;
     }
     public static int adminMenu() {

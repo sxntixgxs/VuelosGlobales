@@ -1,6 +1,8 @@
 package com.vuelosglobales.flight.customer.infrastructure.controllers;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -196,5 +198,23 @@ public class CustomerController {
         } else {
             System.out.println("Failed to update customer");
         }
+    }
+    public void checkCustomer(){
+        Scanner sc = new Scanner(System.in);
+        String customerId = "";
+        while(true){
+            System.out.println("Enter the customer id");
+            customerId = sc.nextLine();
+            Optional<Customer> optionalCustomer = customerService.findCustomerById(customerId);
+            if(optionalCustomer.isPresent()){
+                customerService.showCustomer(customerId).forEach(System.out::println);
+                // sc.nextLine();
+                break;
+            }else{
+                System.out.println("Customer not found");
+                continue;
+            }
+        }
+        sc.close();
     }
 }

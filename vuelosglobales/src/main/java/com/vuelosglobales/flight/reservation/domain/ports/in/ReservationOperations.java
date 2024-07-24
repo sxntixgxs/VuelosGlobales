@@ -6,9 +6,10 @@ import java.util.Optional;
 import com.vuelosglobales.flight.reservation.domain.models.Reservation;
 
 public interface ReservationOperations {
-    Optional<Reservation> createReservation();
+    Optional<Reservation> createReservation(Reservation reservation);
     List<Reservation> findReservationByCustomerId(String idCustomer);
     List<Reservation> findReservationByTripId(String idTrip);
     boolean deleteReservation(int idReservation);
-    Optional<Reservation> showReservationById(int idReservation);
+    Optional<Reservation> findReservationById(int idReservation);
+    Optional<Reservation> findReservationByComponents(Reservation reservation);
 }
