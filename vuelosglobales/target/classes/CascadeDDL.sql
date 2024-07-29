@@ -164,14 +164,24 @@ CREATE TABLE flightReservation(
 );
 -- el pago lo manejaría aparte, es decir flightCheckPaymentReservation!
 
+CREATE TABLE maintenancePlane(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    date DATE NOT NULL,
+    desc VARCHAR(200),
+    idEmployee VARCHAR(20) NOT NULL,
+    idPlane VARCHAR(30) NOT NULL,
+    FOREIGN KEY (idEmployee) REFERENCES employee(id),
+    FOREIGN KEY (idPlane) REFERENCES plane(id)
+);
+
+
+
 
 DELIMITER //
 
 CREATE PROCEDURE updateScaleCity(IN idScale INT, IN idTrip INT)
 BEGIN
     DECLARE depCityId INT;
-
-    
     SELECT R.idDepature INTO depCityId
     FROM trip T
     INNER JOIN route R ON T.idRoute = R.id
